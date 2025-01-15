@@ -13,7 +13,7 @@
 # Dynamic Events
 # Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
 1 335 373
-2 134 171
+2 134 4171
 6 191 226
 7 30 68
 8 93 132
