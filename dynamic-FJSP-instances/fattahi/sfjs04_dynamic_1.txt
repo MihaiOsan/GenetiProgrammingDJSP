@@ -3,10 +3,9 @@
 2 1 1 120 1 1 152 
 2 2 0 125 1 135 2 0 143 1 124 
 
-# Dynamic Events
-# Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
+Dynamic Events
+Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
 
-# Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
+Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
 
-# Cancelled Jobs
-19 2
+Cancelled Jobs

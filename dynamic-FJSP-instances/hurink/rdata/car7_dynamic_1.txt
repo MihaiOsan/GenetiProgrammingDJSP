@@ -7,9 +7,15 @@
 7 2 0 796 5 796 2 1 874 4 874 2 2 214 6 214 2 3 236 4 236 2 4 896 0 896 1 5 898 1 6 302 
 7 2 0 542 3 542 2 1 205 4 205 2 2 578 5 578 2 3 963 0 963 3 4 325 0 325 3 325 2 5 800 1 800 2 6 120 0 120 
 
-# Dynamic Events
-# Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
+Dynamic Events
+Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
+0 3430 4788
+0 6379 7737
+4 2869 3957
 
-# Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
+Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
+854: 7 1 5 175 3 5 244 4 492 1 773 2 0 607 6 95 2 2 303 1 590 2 4 403 3 137 1 3 472 3 2 349 1 850 3 531 
 
-# Cancelled Jobs
+Cancelled Jobs
+5559 3
+2384 6

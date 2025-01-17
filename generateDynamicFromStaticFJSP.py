@@ -42,21 +42,21 @@ def write_fjsp_instance(file_path, num_jobs, num_machines, jobs, events):
                 f.write(f"{len(operation)} " + " ".join(f"{m[0]} {m[1]}" for m in operation) + " ")
             f.write("\n")
 
-        f.write("\n# Dynamic Events\n")
+        f.write("\nDynamic Events\n")
         if 'breakdowns' in events:
-            f.write("# Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}\n")
+            f.write("Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}\n")
             for machine, intervals in events['breakdowns'].items():
                 for start, end in intervals:
                     f.write(f"{machine} {start} {end}\n")
         if 'added_jobs' in events:
-            f.write("\n# Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)\n")
+            f.write("\nAdded Jobs (first number is the time at which the job is added, then pairs of machines and process time)\n")
             for job_time, new_job in events['added_jobs']:
                 f.write(f"{job_time}: {len(new_job)} ")
                 for operation in new_job:
                     f.write(f"{len(operation)} " + " ".join(f"{m[0]} {m[1]}" for m in operation) + " ")
                 f.write("\n")
         if 'cancelled_jobs' in events:
-            f.write("\n# Cancelled Jobs\n")
+            f.write("\nCancelled Jobs\n")
             for cancel_time, cancelled_job in events['cancelled_jobs']:
                 f.write(f"{cancel_time} {cancelled_job}\n")
 
@@ -143,7 +143,7 @@ def add_fjsp_dynamic_events(num_machines, num_jobs, jobs, probabilities, max_bre
                 continue  # Sărim peste iterația curentă dacă intervalul este invalid
 
             start = random.randint(lower_bound, upper_bound)
-            duration = min(max_duration, random.randint(int(0.75 * avg_processing_time), int(2 * avg_processing_time)))
+            duration = min(max_duration, random.randint(int(1.75 * avg_processing_time), int(4 * avg_processing_time)))
 
             if total_breakdown_time >= max_duration:
                 break
@@ -234,4 +234,4 @@ probabilities = {
     'create_job': 0.3
 }
 
-process_fjsp_instances_recursive(input_directory, output_directory, num_variants=5, probabilities=probabilities, max_breakdowns=0.2, max_breakdown_time=0.05, max_added_jobs=0.2)
+process_fjsp_instances_recursive(input_directory, output_directory, num_variants=1, probabilities=probabilities, max_breakdowns=0.3, max_breakdown_time=0.15, max_added_jobs=0.2)

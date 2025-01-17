@@ -15,23 +15,28 @@
 15 1 10 98 1 12 34 1 13 52 2 4 26 3 26 2 1 28 6 28 2 3 39 5 39 1 8 80 1 5 29 3 9 70 4 70 0 70 2 0 43 10 43 3 6 48 4 48 12 48 2 7 58 2 58 1 2 45 3 14 94 4 94 11 94 1 11 96 
 15 2 1 70 12 70 3 10 17 5 17 3 17 2 6 90 5 90 2 12 67 4 67 2 4 14 12 14 3 8 23 11 23 4 23 2 3 21 12 21 1 7 18 1 13 43 1 11 84 2 5 26 1 26 2 9 36 13 36 3 2 93 12 93 4 93 2 14 84 13 84 3 0 42 8 42 2 42 
 
-# Dynamic Events
-# Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
-0 267 327
-1 144 210
-3 118 191
-3 422 495
-4 424 468
-4 734 776
-7 90 156
-7 649 718
-8 31 67
-8 835 907
-9 134 182
-12 13 109
-13 416 451
+Dynamic Events
+Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
+0 64 209
+0 458 574
+1 243 376
+1 803 911
+3 35 160
+7 365 527
+7 769 900
+9 18 186
+10 291 479
+10 656 858
+10 1091 1252
+11 141 279
+11 639 832
+12 419 582
+12 724 932
+13 72 243
+14 330 500
 
-# Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
-289: 15 3 13 93 6 43 3 44 2 3 86 11 85 1 4 43 1 11 45 3 6 53 11 83 14 72 3 10 29 12 27 1 94 1 1 91 3 6 6 14 56 3 86 2 1 28 13 75 1 1 26 2 10 52 6 19 1 4 50 2 3 38 2 61 1 10 93 3 13 96 9 22 7 11 
+Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
 
-# Cancelled Jobs
+Cancelled Jobs
+803 0
+356 6
