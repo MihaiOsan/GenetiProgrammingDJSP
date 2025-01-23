@@ -1,0 +1,30 @@
+
+=== Instanța: mt10c1_dynamic_1.txt (jobs=10, machines=11) ===
+SPT => Makespan=1360
+LPT => Makespan=1477
+Random => Makespan=1395
+
+=== Instanța: seti5xyz_dynamic_1.txt (jobs=15, machines=18) ===
+SPT => Makespan=1820
+LPT => Makespan=1549
+Random => Makespan=1635
+
+=== Instanța: setb4xx_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => Makespan=1369
+LPT => Makespan=1385
+Random => Makespan=1314
+
+=== Instanța: mt10xx_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => Makespan=1216
+LPT => Makespan=1322
+Random => Makespan=1255
+
+=== Instanța: seti5x_dynamic_1.txt (jobs=15, machines=16) ===
+SPT => Makespan=1610
+LPT => Makespan=1541
+Random => Makespan=1472
+
+=== Media makespan per regulă ===
+SPT: 1475.00
+LPT: 1454.80
+Random: 1414.20

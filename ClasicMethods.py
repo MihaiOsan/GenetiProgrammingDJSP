@@ -122,24 +122,17 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
     Versiune incrementală: time += 1.
     - Fără rulare paralelă a aceluiași job (o singură operație la un moment dat).
     - Dacă începe un breakdown pe mașină, operația curentă se întrerupe și jobul își pierde progresul.
-    - Pentru a ne asigura că operația (i+1) nu începe înainte să se termine (i),
-      folosim un vector job_earliest_start[j].
+    - Folosim un vector job_earliest_start[j] care marchează momentul la care jobul j poate începe următoarea operație.
     """
     breakdowns_per_machine = {
         m: sorted(events['breakdowns'].get(m, []), key=lambda x: x[0])
         for m in range(num_machines)
     }
 
-    # job_progress[j] -> indexul operației curente (0-based) care trebuie făcută
-    job_progress = [0]*len(jobs)
-    # job_current_machine[j] -> ce mașină rulează ACUM jobul j (sau None)
-    job_current_machine = [None]*len(jobs)
-    # due_dates fictive, doar pentru EDD (se pot folosi altfel)
-    due_dates = [100*(j+1) for j in range(len(jobs))]
-    # active_ops[m] -> (job, op_index, start_time, remain)
-    active_ops = {m: None for m in range(num_machines)}
-
-    # Momentul la care jobul j poate începe următoarea operație
+    job_progress = [0]*len(jobs)            # indexul operației curente pt fiecare job
+    job_current_machine = [None]*len(jobs)  # ce mașină rulează ACUM jobul j (sau None)
+    due_dates = [100*(j+1) for j in range(len(jobs))]  # folosit de EDD (ex. fictiv)
+    active_ops = {m: None for m in range(num_machines)}  # ce se execută pe fiecare mașină
     job_earliest_start = [0]*len(jobs)
 
     schedule = []
@@ -152,8 +145,9 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
                 return True
         return False
 
+    # "while" continuăm până când toate joburile și-au terminat operațiile
     while any(job_progress[j] < len(jobs[j]) for j in range(len(jobs))):
-        # 1) Added Jobs la momentul curent (pot apărea joburi noi)
+        # 1) Added Jobs la momentul curent
         for (t_add, new_job) in events['added_jobs']:
             if t_add == time:
                 j_id = len(jobs)
@@ -166,9 +160,7 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
         # 2) Cancelled Jobs la momentul curent
         for (t_c, j_c) in events['cancelled_jobs']:
             if t_c == time and j_c < len(job_progress):
-                # Marchez jobul finalizat
-                job_progress[j_c] = len(jobs[j_c])
-                # Dacă era în execuție, îl opresc
+                job_progress[j_c] = len(jobs[j_c])  # consider job-ul finalizat
                 if job_current_machine[j_c] is not None:
                     m_stop = job_current_machine[j_c]
                     active_ops[m_stop] = None
@@ -181,61 +173,46 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
                     # Dacă mașina m executa ceva => se întrerupe
                     if active_ops[m] is not None:
                         (jop, opidx, st, rem) = active_ops[m]
-                        # Jobul jop pierde tot progresul
+                        # jobul jop pierde tot progresul
                         active_ops[m] = None
                         job_current_machine[jop] = None
-                    break  # nu mai verificăm alte breakdown-uri care încep la același moment
+                    break
 
-        # 4) Actualizăm operațiile în curs (mașinile care nu sunt în breakdown)
+        # 4) Actualizăm operațiile în curs (dacă mașina nu e în breakdown)
         for m in range(num_machines):
             if active_ops[m] is not None:
-                # Dacă mașina e în breakdown => nu consumăm timp
                 if machine_in_breakdown(m, time):
                     continue
-                # consumăm 1 unitate de timp din execuția operației
                 (jop, opidx, st, rem) = active_ops[m]
                 new_rem = rem - 1
                 if new_rem <= 0:
-                    # S-a terminat la finalul acestei unități
                     finish_t = time + 1
                     job_progress[jop] += 1
-
-                    # Operația s-a încheiat, jobul poate începe următoarea operație doar după finish_t
                     job_earliest_start[jop] = finish_t
-
-                    # Înregistrăm în schedule
                     schedule.append((jop, opidx, m, st, finish_t))
-                    # Eliberăm mașina
                     active_ops[m] = None
                     job_current_machine[jop] = None
                 else:
                     active_ops[m] = (jop, opidx, st, new_rem)
 
-        # 5) Pe mașinile LIBERE și fără breakdown, încercăm să lansăm o operație
+        # 5) Pe mașinile LIBERE și fără breakdown -> lansăm o operație (selectăm job)
         for m in range(num_machines):
             if active_ops[m] is None and not machine_in_breakdown(m, time):
-                # Căutăm jobul care are cea mai bună prioritate pe mașina m
                 best_j = None
                 best_op = None
                 best_pt = None
                 best_prio = None
 
                 for j_id in range(len(jobs)):
-                    # job neterminat?
                     if job_progress[j_id] < len(jobs[j_id]):
-                        # Are deja o operație pe altă mașină?
                         if job_current_machine[j_id] is not None:
                             continue
-                        # Verificăm dacă ne aflăm înainte de momentul minim la care jobul poate porni
                         if time < job_earliest_start[j_id]:
                             continue
-
-                        # Operația curentă
                         opidx = job_progress[j_id]
-                        alt_ops = jobs[j_id][opidx]  # list[(m_alt, pt)]
+                        alt_ops = jobs[j_id][opidx]
                         for (m_alt, pt_alt) in alt_ops:
                             if m_alt == m:
-                                # calculăm priority
                                 pr = compute_classic_priority(rule_name,
                                                               j_id,
                                                               opidx,
@@ -249,12 +226,10 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
                                     best_op = opidx
                                     best_pt = pt_alt
 
-                # Dacă am găsit un job => pornim execuția
                 if best_j is not None:
                     active_ops[m] = (best_j, best_op, time, best_pt)
                     job_current_machine[best_j] = m
 
-        # Incrementează timpul
         time += 1
 
     # Calculăm makespan
@@ -269,7 +244,7 @@ def schedule_dynamic_no_parallel(jobs, num_machines, events, rule_name):
 ###############################################################################
 # 4) Plot Gantt cu breakdown roșu
 ###############################################################################
-def plot_gantt(schedule, num_machines, breakdowns, title="Gantt Chart"):
+def plot_gantt(schedule, num_machines, breakdowns, title="Gantt Chart", save_path=None):
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Evidențiem zonele de breakdown
@@ -300,40 +275,81 @@ def plot_gantt(schedule, num_machines, breakdowns, title="Gantt Chart"):
     ax.legend(handles=[patch_bd])
 
     plt.tight_layout()
-    plt.show()
+
+    if save_path:
+        plt.savefig(save_path, dpi=150)
+        plt.close()
+    else:
+        plt.show()
 
 
 ###############################################################################
-# 5) MAIN
+# 5) MAIN - rulează toate fișierele și calculează media pe fiecare regulă
 ###############################################################################
 if __name__ == "__main__":
-    # Exemplu: citim un fișier test (trebuie să existe la calea specificată)
-    test_file = "dynamic-FJSP-instances/barnes/mt10c1_dynamic_1.txt"
-    if not os.path.exists(test_file):
-        print(f"Fișierul {test_file} nu există!")
-        exit(1)
+    input_dir = "dynamic-FJSP-instances/test"
+    output_dir = "gantt_outputs_classic"
+    os.makedirs(output_dir, exist_ok=True)
 
-    # 1) Citim instanța
-    num_jobs, num_machines, jobs, events = read_dynamic_fjsp_instance(test_file)
+    # Regulile clasice pe care le testăm
+    rules = ["SPT", "LPT", "Random"]
 
-    # 2) Reguli de test (clasic)
-    rules = ["SPT", "LPT", "EDD", "Random"]
+    # Vom stoca sumă și count pt calcul medie pe fiecare regulă
+    makespan_sums = {r: 0.0 for r in rules}
+    makespan_counts = {r: 0 for r in rules}
 
-    for rule in rules:
-        # Copiem structurile (ca să nu le modificăm permanent)
-        jb_copy = copy.deepcopy(jobs)
-        ev_copy = {
-            "breakdowns": {m: list(bds) for m, bds in events["breakdowns"].items()},
-            "added_jobs": list(events["added_jobs"]),
-            "cancelled_jobs": list(events["cancelled_jobs"])
-        }
+    results_file = "rezultate_classic.txt"
+    with open(results_file, "w") as f_out:
+        # Parcurgem toate fișierele .txt din director
+        for fname in os.listdir(input_dir):
+            if not fname.endswith(".txt"):
+                continue
 
-        # 3) Planificăm
-        makespan, schedule = schedule_dynamic_no_parallel(
-            jb_copy, num_machines, ev_copy, rule
-        )
-        print(f"[{rule}] => Makespan = {makespan}")
+            fpath = os.path.join(input_dir, fname)
+            # Citim instanța
+            num_jobs, num_machines, jobs, events = read_dynamic_fjsp_instance(fpath)
+            f_out.write(f"\n=== Instanța: {fname} (jobs={num_jobs}, machines={num_machines}) ===\n")
+            print(f"\n=== Instanța: {fname} ===")
 
-        # 4) Afișăm Gantt
-        plot_gantt(schedule, num_machines, ev_copy["breakdowns"],
-                   title=f"{rule} => makespan={makespan}")
+            # Pentru fiecare regulă
+            for rule in rules:
+                # Facem deep copy pentru a nu modifica structura originală
+                jb_copy = copy.deepcopy(jobs)
+                ev_copy = {
+                    "breakdowns": {m: list(bds) for m, bds in events["breakdowns"].items()},
+                    "added_jobs": list(events["added_jobs"]),
+                    "cancelled_jobs": list(events["cancelled_jobs"])
+                }
+
+                makespan, schedule = schedule_dynamic_no_parallel(
+                    jb_copy, num_machines, ev_copy, rule
+                )
+                # Salvăm în fișier
+                f_out.write(f"{rule} => Makespan={makespan}\n")
+                print(f"{rule} => Makespan={makespan}")
+
+                # Adăugăm la sumă
+                makespan_sums[rule] += makespan
+                makespan_counts[rule] += 1
+
+                # Salvăm Gantt
+                gantt_title = f"{fname} - {rule} (makespan={makespan})"
+                png_name = f"{fname}_{rule}.png".replace(".txt", "")
+                png_path = os.path.join(output_dir, png_name)
+                plot_gantt(schedule, num_machines, ev_copy["breakdowns"],
+                           title=gantt_title,
+                           save_path=png_path)
+
+        # La final, calculăm media pe fiecare regulă
+        f_out.write("\n=== Media makespan per regulă ===\n")
+        print("\n=== Media makespan per regulă ===")
+        for rule in rules:
+            if makespan_counts[rule] > 0:
+                avg_ms = makespan_sums[rule] / makespan_counts[rule]
+            else:
+                avg_ms = 0.0
+            f_out.write(f"{rule}: {avg_ms:.2f}\n")
+            print(f"{rule}: {avg_ms:.2f}")
+
+    print(f"\nRezultatele au fost scrise în fisierul: {results_file}")
+    print(f"Graficele Gantt se află în directorul: {output_dir}")

@@ -1,0 +1,9 @@
+Instanță: mt10c1_dynamic_1.txt, Makespan: 1234
+Instanță: seti5xyz_dynamic_1.txt, Makespan: 1644
+Instanță: setb4xx_dynamic_1.txt, Makespan: 1269
+Instanță: mt10xx_dynamic_1.txt, Makespan: 1219
+Instanță: seti5x_dynamic_1.txt, Makespan: 1478
+
+Media makespan: 1368.80
+
+Best rule (tree): sub(mul(sub(0.0, RO), MW)protected_div(max(neg(min(mul(min(PT, 0.0), min(0.0, PT)), neg(RO))), 0.0), mul(max(PT, MW), 1.0)))
