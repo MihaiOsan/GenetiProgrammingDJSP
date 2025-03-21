@@ -466,10 +466,10 @@ if __name__ == "__main__":
                 all_instances.append((jobs, num_machines, events, fname))
 
     # Rulăm GP (atenție, parametrii pop_size=2, ngen=10 sunt exemplificativi)
-    best_rule = run_genetic_program(all_instances, ngen=25, pop_size=10)
+    best_rule = run_genetic_program(all_instances, ngen=25, pop_size=15)
     print("Best rule (tree):", best_rule)
 
-    input_dir_test = "dynamic-FJSP-instances/test"
+    input_dir_test = "dynamic-FJSP-instances/test/barnes"
     all_instancest = []
 
     # Vom reține și numele fișierului în instanțe, pentru raportare

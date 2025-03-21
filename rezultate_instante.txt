@@ -1,9 +1,23 @@
-Instanță: mt10c1_dynamic_1.txt, Makespan: 1234
-Instanță: seti5xyz_dynamic_1.txt, Makespan: 1644
-Instanță: setb4xx_dynamic_1.txt, Makespan: 1269
-Instanță: mt10xx_dynamic_1.txt, Makespan: 1219
-Instanță: seti5x_dynamic_1.txt, Makespan: 1478
+Instanță: setb4cc_dynamic_1.txt, Makespan: 1978
+Instanță: seti5xy_dynamic_1.txt, Makespan: 2262
+Instanță: mt10c1_dynamic_1.txt, Makespan: 1292
+Instanță: mt10xy_dynamic_1.txt, Makespan: 1283
+Instanță: mt10cc_dynamic_1.txt, Makespan: 1230
+Instanță: mt10xxx_dynamic_1.txt, Makespan: 1464
+Instanță: setb4x_dynamic_1.txt, Makespan: 2093
+Instanță: setb4xy_dynamic_1.txt, Makespan: 1444
+Instanță: seti5xyz_dynamic_1.txt, Makespan: 2089
+Instanță: setb4xxx_dynamic_1.txt, Makespan: 1880
+Instanță: seti5cc_dynamic_1.txt, Makespan: 2157
+Instanță: seti5xxx_dynamic_1.txt, Makespan: 2065
+Instanță: setb4xx_dynamic_1.txt, Makespan: 1803
+Instanță: mt10x_dynamic_1.txt, Makespan: 1390
+Instanță: setb4xyz_dynamic_1.txt, Makespan: 1531
+Instanță: mt10xyz_dynamic_1.txt, Makespan: 1354
+Instanță: mt10xx_dynamic_1.txt, Makespan: 1346
+Instanță: setb4c9_dynamic_1.txt, Makespan: 1669
+Instanță: seti5x_dynamic_1.txt, Makespan: 2184
+Instanță: seti5c12_dynamic_1.txt, Makespan: 2096
+Instanță: seti5xx_dynamic_1.txt, Makespan: 1999
 
-Media makespan: 1368.80
-
-Best rule (tree): sub(mul(sub(0.0, RO), MW)protected_div(max(neg(min(mul(min(PT, 0.0), min(0.0, PT)), neg(RO))), 0.0), mul(max(PT, MW), 1.0)))
+Media makespan: 1743.29

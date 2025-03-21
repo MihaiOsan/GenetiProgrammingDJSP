@@ -12,13 +12,21 @@
 
 Dynamic Events
 Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
-0 647 816
-2 447 570
-6 666 827
-9 452 575
+0 1711 1920
+0 4121 4575
+1 4812 5298
+2 324 694
+2 974 1339
+2 4046 4426
+3 882 1307
+6 2787 3249
+6 3714 3928
+7 2041 2526
+8 509 915
 
 Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
+1324: 10 2 9 46 7 29 5 6 45 9 29 8 25 7 80 0 58 8 4 24 3 37 6 48 1 19 9 90 0 10 8 37 2 80 8 6 60 5 55 0 16 8 81 4 19 9 47 2 93 7 36 8 7 13 5 34 8 92 0 12 3 86 6 28 2 23 4 74 3 1 54 9 75 8 88 5 5 25 7 96 1 89 2 57 6 87 1 9 66 5 5 25 0 27 9 85 3 40 4 29 2 9 54 1 52 
 
 Cancelled Jobs
-238 2
-1571 7
+280 1
+1131 5

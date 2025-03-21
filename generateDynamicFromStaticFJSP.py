@@ -1,3 +1,4 @@
+import math
 import os
 import random
 
@@ -108,43 +109,84 @@ def calculate_min_max_processing_times_per_machine(num_machines, jobs):
 
 
 # Generare evenimente dinamice
-def add_fjsp_dynamic_events(num_machines, num_jobs, jobs, probabilities, max_breakdowns=0.2, max_breakdown_time=0.05, max_added_jobs=0.2):
+def add_fjsp_dynamic_events(num_machines, num_jobs, jobs, probabilities,
+                           max_breakdowns=0.2, max_breakdown_time=0.2, max_added_jobs=0.2):
+    import math
+
     events = {
         'breakdowns': {m: [] for m in range(num_machines)},
         'added_jobs': [],
         'cancelled_jobs': []
     }
 
+    # 1. Calculăm timpii totali și medii pentru fiecare mașină
     machines_total_times, machines_avg_times = calculate_total_and_average_execution_times_per_machine(num_machines, jobs)
     max_total_machine_processing_time = 0
+
+    # 2. Iterăm pe mașini pentru a genera defecțiunile
     for machine in range(num_machines):
-        total_machine_processing_time = machines_total_times[machine]
+        total_machine_processing_time = 2*machines_total_times[machine]
         if total_machine_processing_time > max_total_machine_processing_time:
             max_total_machine_processing_time = total_machine_processing_time
 
+        # Durata maximă a unei defecțiuni, ex. 5%...15% din timpul total
         max_duration = max(1, int(total_machine_processing_time * max_breakdown_time))
         avg_processing_time = machines_avg_times[machine]
         total_breakdown_time = 0
-        breakdowns_number = int(max_breakdowns * num_jobs)
         last_breakdown_end_time = 0
+
+        # Determinăm un număr maxim de posibile defecțiuni (breakdowns_number)...
+        breakdowns_number = int(max_breakdowns * num_jobs)
+        # ...și câte apar efectiv, în funcție de `probabilities['breakdown']`
         true_breakdowns = 0
         for _ in range(breakdowns_number):
             if random.random() < probabilities['breakdown']:
                 true_breakdowns += 1
 
+        # Împărțim intervalul total [0, total_machine_processing_time] în segmente
+        segment_length = max(1, int(4 * avg_processing_time))
+        num_segments = int(math.ceil(total_machine_processing_time / segment_length))
+
+        # Cream o listă cu toate segmentele (0..num_segments-1), pe care o "amestecăm"
+        possible_segments = list(range(num_segments))
+        random.shuffle(possible_segments)
+
+        # 3. Generăm defecțiunile alocând câte un segment diferit fiecăreia
         for i in range(true_breakdowns):
+            if not possible_segments:
+                break  # nu mai avem segmente libere
+
+            # Extragem aleator un segment din cele rămase
+            seg_index = possible_segments.pop()
+
+            segment_start = seg_index * segment_length
+            segment_end = min((seg_index + 1) * segment_length, total_machine_processing_time)
+
+            # Menținem un mic offset față de ultima defecțiune, dacă e cazul
             if last_breakdown_end_time == 0:
-                lower_bound = 0
+                lower_bound = segment_start
             else:
-                lower_bound = last_breakdown_end_time + int(0.1 * num_jobs * avg_processing_time)
-            upper_bound = int((i + 1) / breakdowns_number * total_machine_processing_time)
+                lower_bound = max(
+                    segment_start,
+                    last_breakdown_end_time + int(0.1 * num_jobs * avg_processing_time)
+                )
+
+            upper_bound = segment_end
 
             if lower_bound >= upper_bound:
-                continue  # Sărim peste iterația curentă dacă intervalul este invalid
+                continue  # segment inutilizabil, trecem la următorul
 
+            # Momentul de start al defecțiunii, într-o fereastră random
             start = random.randint(lower_bound, upper_bound)
-            duration = min(max_duration, random.randint(int(1.75 * avg_processing_time), int(4 * avg_processing_time)))
 
+            # Durata defecțiunii – menținem logica originală
+            duration = min(
+                max_duration,
+                random.randint(int(4 * avg_processing_time),
+                               int(10 * avg_processing_time))
+            )
+
+            # Dacă am depășit deja "rezerva" noastră de durată maximă...
             if total_breakdown_time >= max_duration:
                 break
 
@@ -153,45 +195,50 @@ def add_fjsp_dynamic_events(num_machines, num_jobs, jobs, probabilities, max_bre
                 events['breakdowns'][machine] = []
             events['breakdowns'][machine].append((start, end))
 
+            total_breakdown_time += duration
             last_breakdown_end_time = end
 
-
+    # 4. Generăm joburile anulate
     for job_id in range(num_jobs):
         if random.random() < probabilities['cancel_job']:
             cancel_time = random.randint(0, int(max_total_machine_processing_time * 0.65))
             events['cancelled_jobs'].append((cancel_time, job_id))
 
-
+    # 5. Generăm joburi noi
     min_machines_per_operation = min(len(operation) for job in jobs for operation in job)
     max_machines_per_operation = max(len(operation) for job in jobs for operation in job)
     min_operations = min(len(job) for job in jobs)
     max_operations = max(len(job) for job in jobs)
     machine_min_max_times = calculate_min_max_processing_times_per_machine(num_machines, jobs)
 
-    # Generare joburi noi
     new_jobs_number = int(max_added_jobs * num_jobs)
     for _ in range(new_jobs_number):
         if random.random() < probabilities['create_job']:
-            new_job_time = random.randint(int(0.05*max_total_machine_processing_time), int(0.4*max_total_machine_processing_time))  # Timpul la care jobul este introdus
+            new_job_time = random.randint(
+                int(0.05 * max_total_machine_processing_time),
+                int(0.4  * max_total_machine_processing_time)
+            )
             num_operations = random.randint(min_operations, max_operations)
             new_job = []
 
             for _ in range(num_operations):
-                # Determinăm numărul de mașini disponibile pentru operație
                 num_machines_op = random.randint(min_machines_per_operation, max_machines_per_operation)
                 machines = random.sample(range(num_machines), num_machines_op)
 
                 operation = []
-                for machine in machines:
-                    # Timp de procesare între limitele specifice fiecărei mașini
-                    processing_time = random.randint(int(machine_min_max_times[machine][0]), int(machine_min_max_times[machine][1]))
-                    operation.append((machine, processing_time))
+                for m in machines:
+                    processing_time = random.randint(
+                        int(machine_min_max_times[m][0]),
+                        int(machine_min_max_times[m][1])
+                    )
+                    operation.append((m, processing_time))
 
                 new_job.append(operation)
 
             events['added_jobs'].append((new_job_time, new_job))
 
     return events
+
 
 # Funcție recursivă pentru procesarea fișierelor dintr-un director și subdirectoare
 def process_fjsp_instances_recursive(input_dir, output_dir, num_variants=3, probabilities=None, max_breakdowns=0.2, max_breakdown_time=0.05, max_added_jobs=0.2):
@@ -229,9 +276,19 @@ def process_fjsp_instances_recursive(input_dir, output_dir, num_variants=3, prob
 input_directory = "fjsp-instances-main"  # Directorul cu fișierele originale
 output_directory = "dynamic-FJSP-instances"  # Directorul pentru fișierele generate
 probabilities = {
-    'breakdown': 0.2,
+    'breakdown': 0.25,
     'cancel_job': 0.1,
-    'create_job': 0.3
+    'create_job': 0.35
 }
 
-process_fjsp_instances_recursive(input_directory, output_directory, num_variants=1, probabilities=probabilities, max_breakdowns=0.3, max_breakdown_time=0.15, max_added_jobs=0.2)
+process_fjsp_instances_recursive(input_directory, output_directory, num_variants=3, probabilities=probabilities, max_breakdowns=0.4, max_breakdown_time=0.2, max_added_jobs=0.4)
+
+input_directory = "fjsp-instances-main"  # Directorul cu fișierele originale
+output_directory = "dynamic-FJSP-instances/test"  # Directorul pentru fișierele generate
+probabilities = {
+    'breakdown': 0.25,
+    'cancel_job': 0.1,
+    'create_job': 0.35
+}
+
+process_fjsp_instances_recursive(input_directory, output_directory, num_variants=1, probabilities=probabilities, max_breakdowns=0.4, max_breakdown_time=0.2, max_added_jobs=0.4)
