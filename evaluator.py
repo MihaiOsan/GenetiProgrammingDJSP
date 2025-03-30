@@ -39,7 +39,7 @@ def run_genetic_program(instances, toolbox, ngen=10, pop_size=20):
     pop = toolbox.population(n=pop_size)
     hof = tools.HallOfFame(1)
 
-    algorithms.eaSimple(pop, toolbox, cxpb=0.7, mutpb=0.3, ngen=ngen,
+    algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.3, ngen=ngen,
                         halloffame=hof, verbose=True)
 
     return hof[0]

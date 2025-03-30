@@ -287,7 +287,7 @@ def plot_gantt(schedule, num_machines, breakdowns, title="Gantt Chart", save_pat
 # 5) MAIN - rulează toate fișierele și calculează media pe fiecare regulă
 ###############################################################################
 if __name__ == "__main__":
-    input_dir = "dynamic-FJSP-instances/test/barnes"
+    input_dir = "dynamic-FJSP-instances/barnes"
     output_dir = "gantt_outputs_classic"
     os.makedirs(output_dir, exist_ok=True)
 

@@ -13,10 +13,15 @@ def create_toolbox(np = 5):
     operatorilor de încrucișare/mutare selecție etc.
     """
     print("Create toolbox")
-    pset = gp.PrimitiveSet("MAIN", 3)  # 3 argumente: PT, RO, MW
-    pset.renameArguments(ARG0='PT')
-    pset.renameArguments(ARG1='RO')
-    pset.renameArguments(ARG2='MW')
+    pset = gp.PrimitiveSet("MAIN", 7)
+    pset.renameArguments(ARG0='PT')  # Processing Time
+    pset.renameArguments(ARG1='RO')  # Remaining Operations
+    pset.renameArguments(ARG2='MW')  # Machine Wait
+    pset.renameArguments(ARG3='TQ')  # Time in Queue
+    pset.renameArguments(ARG4='WIP')  # Work In Progress
+    pset.renameArguments(ARG5='RPT')  # Remaining Processing Time (job-level)
+    pset.renameArguments(ARG6='TUF')  # Time Until Fixed (sau Until next breakdown)
+
 
     pset.addPrimitive(operator.add, 2)
     pset.addPrimitive(operator.sub, 2)
@@ -38,7 +43,7 @@ def create_toolbox(np = 5):
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("compile", gp.compile, pset=pset)
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=np)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=np//3)
     # Pas 2: Să folosim executorul pentru evaluare în paralel
     toolbox.register("map", executor.map)
 
