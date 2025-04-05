@@ -43,7 +43,7 @@ def create_toolbox(np = 5):
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("compile", gp.compile, pset=pset)
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=np//3)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=np)
     # Pas 2: Să folosim executorul pentru evaluare în paralel
     toolbox.register("map", executor.map)
 

@@ -1,320 +1,110 @@
 
-=== Instanța: seti5xy_dynamic_2.txt (jobs=15, machines=17) ===
-SPT => Makespan=2085
-LPT => Makespan=2085
-Random => Makespan=1874
-
 === Instanța: setb4cc_dynamic_1.txt (jobs=15, machines=12) ===
-SPT => Makespan=2172
-LPT => Makespan=1934
-Random => Makespan=1923
-
-=== Instanța: seti5xy_dynamic_3.txt (jobs=15, machines=17) ===
-SPT => Makespan=2215
-LPT => Makespan=2272
-Random => Makespan=2327
+SPT => Makespan=2037
+LPT => Makespan=1996
+Random => Makespan=2087
 
 === Instanța: seti5xy_dynamic_1.txt (jobs=15, machines=17) ===
-SPT => Makespan=2149
-LPT => Makespan=2465
-Random => Makespan=2416
-
-=== Instanța: setb4cc_dynamic_3.txt (jobs=15, machines=12) ===
-SPT => Makespan=2130
-LPT => Makespan=2208
-Random => Makespan=2332
-
-=== Instanța: setb4cc_dynamic_2.txt (jobs=15, machines=12) ===
-SPT => Makespan=1792
-LPT => Makespan=2121
-Random => Makespan=2036
-
-=== Instanța: mt10c1_dynamic_1.txt (jobs=10, machines=11) ===
-SPT => Makespan=1320
-LPT => Makespan=1431
-Random => Makespan=1390
-
-=== Instanța: mt10xy_dynamic_1.txt (jobs=10, machines=12) ===
-SPT => Makespan=1352
-LPT => Makespan=1587
-Random => Makespan=1432
-
-=== Instanța: mt10c1_dynamic_2.txt (jobs=10, machines=11) ===
-SPT => Makespan=1607
-LPT => Makespan=1833
-Random => Makespan=1662
-
-=== Instanța: mt10xy_dynamic_3.txt (jobs=10, machines=12) ===
-SPT => Makespan=1644
-LPT => Makespan=1649
-Random => Makespan=1637
-
-=== Instanța: mt10xy_dynamic_2.txt (jobs=10, machines=12) ===
-SPT => Makespan=1240
-LPT => Makespan=1533
-Random => Makespan=1386
-
-=== Instanța: mt10c1_dynamic_3.txt (jobs=10, machines=11) ===
-SPT => Makespan=1629
-LPT => Makespan=1832
-Random => Makespan=1522
-
-=== Instanța: mt10cc_dynamic_1.txt (jobs=10, machines=12) ===
-SPT => Makespan=1334
-LPT => Makespan=1487
-Random => Makespan=1392
-
-=== Instanța: setb4x_dynamic_3.txt (jobs=15, machines=11) ===
-SPT => Makespan=2073
-LPT => Makespan=2236
-Random => Makespan=1815
-
-=== Instanța: setb4x_dynamic_2.txt (jobs=15, machines=11) ===
-SPT => Makespan=2178
-LPT => Makespan=1940
-Random => Makespan=2027
-
-=== Instanța: mt10xxx_dynamic_1.txt (jobs=10, machines=13) ===
-SPT => Makespan=1303
-LPT => Makespan=1518
-Random => Makespan=1493
-
-=== Instanța: mt10cc_dynamic_2.txt (jobs=10, machines=12) ===
-SPT => Makespan=1632
-LPT => Makespan=1742
-Random => Makespan=1463
-
-=== Instanța: mt10xxx_dynamic_3.txt (jobs=10, machines=13) ===
-SPT => Makespan=1273
-LPT => Makespan=1451
-Random => Makespan=1403
-
-=== Instanța: setb4x_dynamic_1.txt (jobs=15, machines=11) ===
-SPT => Makespan=2157
-LPT => Makespan=2148
-Random => Makespan=1865
-
-=== Instanța: mt10xxx_dynamic_2.txt (jobs=10, machines=13) ===
-SPT => Makespan=1228
-LPT => Makespan=1422
-Random => Makespan=1251
-
-=== Instanța: mt10cc_dynamic_3.txt (jobs=10, machines=12) ===
-SPT => Makespan=1487
-LPT => Makespan=1586
-Random => Makespan=1700
-
-=== Instanța: setb4xy_dynamic_1.txt (jobs=15, machines=12) ===
-SPT => Makespan=2006
-LPT => Makespan=2053
-Random => Makespan=2036
-
-=== Instanța: seti5cc_dynamic_3.txt (jobs=15, machines=17) ===
-SPT => Makespan=2001
-LPT => Makespan=2003
-Random => Makespan=2260
-
-=== Instanța: setb4xxx_dynamic_2.txt (jobs=15, machines=13) ===
-SPT => Makespan=2101
-LPT => Makespan=1980
-Random => Makespan=1806
-
-=== Instanța: setb4xxx_dynamic_3.txt (jobs=15, machines=13) ===
-SPT => Makespan=1517
-LPT => Makespan=1815
-Random => Makespan=1654
-
-=== Instanța: seti5cc_dynamic_2.txt (jobs=15, machines=17) ===
-SPT => Makespan=2378
-LPT => Makespan=2454
-Random => Makespan=2378
-
-=== Instanța: seti5xyz_dynamic_1.txt (jobs=15, machines=18) ===
-SPT => Makespan=2122
-LPT => Makespan=2454
-Random => Makespan=2323
-
-=== Instanța: setb4xy_dynamic_2.txt (jobs=15, machines=12) ===
-SPT => Makespan=1548
-LPT => Makespan=1906
-Random => Makespan=1560
-
-=== Instanța: seti5xyz_dynamic_3.txt (jobs=15, machines=18) ===
-SPT => Makespan=1793
-LPT => Makespan=1885
-Random => Makespan=1744
-
-=== Instanța: setb4xxx_dynamic_1.txt (jobs=15, machines=13) ===
-SPT => Makespan=2060
-LPT => Makespan=1889
-Random => Makespan=2060
-
-=== Instanța: seti5cc_dynamic_1.txt (jobs=15, machines=17) ===
-SPT => Makespan=2392
-LPT => Makespan=2380
+SPT => Makespan=2394
+LPT => Makespan=2417
 Random => Makespan=2392
 
-=== Instanța: seti5xyz_dynamic_2.txt (jobs=15, machines=18) ===
-SPT => Makespan=2068
-LPT => Makespan=2347
-Random => Makespan=2176
+=== Instanța: mt10c1_dynamic_1.txt (jobs=10, machines=11) ===
+SPT => Makespan=1679
+LPT => Makespan=1691
+Random => Makespan=1593
 
-=== Instanța: setb4xy_dynamic_3.txt (jobs=15, machines=12) ===
-SPT => Makespan=2086
-LPT => Makespan=2075
-Random => Makespan=1845
+=== Instanța: mt10xy_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => Makespan=1344
+LPT => Makespan=1415
+Random => Makespan=1436
 
-=== Instanța: setb4xyz_dynamic_2.txt (jobs=15, machines=13) ===
-SPT => Makespan=1538
-LPT => Makespan=2017
-Random => Makespan=1612
+=== Instanța: mt10cc_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => Makespan=1368
+LPT => Makespan=1513
+Random => Makespan=1355
 
-=== Instanța: mt10x_dynamic_2.txt (jobs=10, machines=11) ===
-SPT => Makespan=1327
-LPT => Makespan=1508
-Random => Makespan=1339
+=== Instanța: mt10xxx_dynamic_1.txt (jobs=10, machines=13) ===
+SPT => Makespan=1533
+LPT => Makespan=1395
+Random => Makespan=1427
 
-=== Instanța: seti5xxx_dynamic_1.txt (jobs=15, machines=18) ===
-SPT => Makespan=2098
-LPT => Makespan=2085
-Random => Makespan=1967
-
-=== Instanța: mt10x_dynamic_3.txt (jobs=10, machines=11) ===
-SPT => Makespan=1496
-LPT => Makespan=1698
-Random => Makespan=1589
-
-=== Instanța: setb4xyz_dynamic_3.txt (jobs=15, machines=13) ===
-SPT => Makespan=1595
-LPT => Makespan=1648
-Random => Makespan=1576
-
-=== Instanța: setb4xx_dynamic_1.txt (jobs=15, machines=12) ===
-SPT => Makespan=1921
-LPT => Makespan=1910
-Random => Makespan=1740
-
-=== Instanța: mt10x_dynamic_1.txt (jobs=10, machines=11) ===
-SPT => Makespan=1564
-LPT => Makespan=1673
-Random => Makespan=1526
-
-=== Instanța: setb4xx_dynamic_3.txt (jobs=15, machines=12) ===
-SPT => Makespan=2018
-LPT => Makespan=2068
-Random => Makespan=1624
-
-=== Instanța: setb4xyz_dynamic_1.txt (jobs=15, machines=13) ===
-SPT => Makespan=1697
-LPT => Makespan=1938
-Random => Makespan=1745
-
-=== Instanța: seti5xxx_dynamic_3.txt (jobs=15, machines=18) ===
-SPT => Makespan=2158
-LPT => Makespan=2286
-Random => Makespan=2246
-
-=== Instanța: seti5xxx_dynamic_2.txt (jobs=15, machines=18) ===
-SPT => Makespan=2017
-LPT => Makespan=2273
-Random => Makespan=2304
-
-=== Instanța: setb4xx_dynamic_2.txt (jobs=15, machines=12) ===
-SPT => Makespan=1591
-LPT => Makespan=1735
-Random => Makespan=1683
-
-=== Instanța: mt10xyz_dynamic_1.txt (jobs=10, machines=13) ===
-SPT => Makespan=1270
-LPT => Makespan=1206
-Random => Makespan=1112
-
-=== Instanța: mt10xyz_dynamic_3.txt (jobs=10, machines=13) ===
-SPT => Makespan=1149
-LPT => Makespan=1528
-Random => Makespan=1456
-
-=== Instanța: mt10xyz_dynamic_2.txt (jobs=10, machines=13) ===
-SPT => Makespan=1288
-LPT => Makespan=1294
-Random => Makespan=1306
-
-=== Instanța: mt10xx_dynamic_1.txt (jobs=10, machines=12) ===
-SPT => Makespan=1421
-LPT => Makespan=1590
-Random => Makespan=1499
-
-=== Instanța: setb4c9_dynamic_1.txt (jobs=15, machines=11) ===
-SPT => Makespan=1921
-LPT => Makespan=1921
-Random => Makespan=1921
-
-=== Instanța: setb4c9_dynamic_3.txt (jobs=15, machines=11) ===
-SPT => Makespan=1746
-LPT => Makespan=2221
+=== Instanța: setb4x_dynamic_1.txt (jobs=15, machines=11) ===
+SPT => Makespan=1724
+LPT => Makespan=2094
 Random => Makespan=1724
 
-=== Instanța: mt10xx_dynamic_2.txt (jobs=10, machines=12) ===
-SPT => Makespan=1519
-LPT => Makespan=1472
-Random => Makespan=1528
+=== Instanța: setb4xy_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => Makespan=1938
+LPT => Makespan=1860
+Random => Makespan=1576
 
-=== Instanța: mt10xx_dynamic_3.txt (jobs=10, machines=12) ===
-SPT => Makespan=1373
-LPT => Makespan=1614
-Random => Makespan=1810
+=== Instanța: seti5xyz_dynamic_1.txt (jobs=15, machines=18) ===
+SPT => Makespan=2049
+LPT => Makespan=2429
+Random => Makespan=2142
 
-=== Instanța: setb4c9_dynamic_2.txt (jobs=15, machines=11) ===
-SPT => Makespan=2157
-LPT => Makespan=1890
-Random => Makespan=2000
+=== Instanța: setb4xxx_dynamic_1.txt (jobs=15, machines=13) ===
+SPT => Makespan=2007
+LPT => Makespan=1964
+Random => Makespan=1572
 
-=== Instanța: seti5xx_dynamic_3.txt (jobs=15, machines=17) ===
-SPT => Makespan=2021
-LPT => Makespan=2381
-Random => Makespan=2314
+=== Instanța: seti5cc_dynamic_1.txt (jobs=15, machines=17) ===
+SPT => Makespan=2161
+LPT => Makespan=2393
+Random => Makespan=2364
 
-=== Instanța: seti5c12_dynamic_3.txt (jobs=15, machines=16) ===
-SPT => Makespan=2079
-LPT => Makespan=2210
-Random => Makespan=2210
+=== Instanța: seti5xxx_dynamic_1.txt (jobs=15, machines=18) ===
+SPT => Makespan=2347
+LPT => Makespan=2250
+Random => Makespan=2122
 
-=== Instanța: seti5c12_dynamic_2.txt (jobs=15, machines=16) ===
-SPT => Makespan=1854
-LPT => Makespan=1977
-Random => Makespan=2008
+=== Instanța: setb4xx_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => Makespan=2086
+LPT => Makespan=2071
+Random => Makespan=1983
+
+=== Instanța: mt10x_dynamic_1.txt (jobs=10, machines=11) ===
+SPT => Makespan=1381
+LPT => Makespan=1526
+Random => Makespan=1504
+
+=== Instanța: setb4xyz_dynamic_1.txt (jobs=15, machines=13) ===
+SPT => Makespan=1728
+LPT => Makespan=1782
+Random => Makespan=1738
+
+=== Instanța: mt10xyz_dynamic_1.txt (jobs=10, machines=13) ===
+SPT => Makespan=1478
+LPT => Makespan=1411
+Random => Makespan=1393
+
+=== Instanța: mt10xx_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => Makespan=1377
+LPT => Makespan=1815
+Random => Makespan=1577
+
+=== Instanța: setb4c9_dynamic_1.txt (jobs=15, machines=11) ===
+SPT => Makespan=1829
+LPT => Makespan=1791
+Random => Makespan=1847
 
 === Instanța: seti5x_dynamic_1.txt (jobs=15, machines=16) ===
-SPT => Makespan=2202
-LPT => Makespan=2318
-Random => Makespan=2175
-
-=== Instanța: seti5xx_dynamic_2.txt (jobs=15, machines=17) ===
-SPT => Makespan=2350
-LPT => Makespan=2695
-Random => Makespan=2624
-
-=== Instanța: seti5x_dynamic_3.txt (jobs=15, machines=16) ===
-SPT => Makespan=2800
-LPT => Makespan=2639
-Random => Makespan=2639
+SPT => Makespan=2200
+LPT => Makespan=2226
+Random => Makespan=2207
 
 === Instanța: seti5c12_dynamic_1.txt (jobs=15, machines=16) ===
-SPT => Makespan=2170
-LPT => Makespan=2163
-Random => Makespan=2176
-
-=== Instanța: seti5x_dynamic_2.txt (jobs=15, machines=16) ===
-SPT => Makespan=2315
-LPT => Makespan=2229
-Random => Makespan=2411
+SPT => Makespan=2099
+LPT => Makespan=2315
+Random => Makespan=2190
 
 === Instanța: seti5xx_dynamic_1.txt (jobs=15, machines=17) ===
-SPT => Makespan=2123
-LPT => Makespan=2164
-Random => Makespan=2191
+SPT => Makespan=2329
+LPT => Makespan=2395
+Random => Makespan=2288
 
 === Media makespan per regulă ===
-SPT: 1823.02
-LPT: 1937.65
-Random: 1851.35
+SPT: 1861.33
+LPT: 1940.43
+Random: 1834.14
