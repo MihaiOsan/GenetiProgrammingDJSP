@@ -1,23 +1,125 @@
-Instanță: setb4cc_dynamic_1.txt, Makespan: 1466
-Instanță: seti5xy_dynamic_1.txt, Makespan: 1552
-Instanță: mt10c1_dynamic_1.txt, Makespan: 1592
-Instanță: mt10xy_dynamic_1.txt, Makespan: 1166
-Instanță: mt10cc_dynamic_1.txt, Makespan: 1328
-Instanță: mt10xxx_dynamic_1.txt, Makespan: 1377
-Instanță: setb4x_dynamic_1.txt, Makespan: 1652
-Instanță: setb4xy_dynamic_1.txt, Makespan: 1426
-Instanță: seti5xyz_dynamic_1.txt, Makespan: 1792
-Instanță: setb4xxx_dynamic_1.txt, Makespan: 1425
-Instanță: seti5cc_dynamic_1.txt, Makespan: 1621
-Instanță: seti5xxx_dynamic_1.txt, Makespan: 1739
-Instanță: setb4xx_dynamic_1.txt, Makespan: 1460
-Instanță: mt10x_dynamic_1.txt, Makespan: 1379
-Instanță: setb4xyz_dynamic_1.txt, Makespan: 1130
-Instanță: mt10xyz_dynamic_1.txt, Makespan: 1130
-Instanță: mt10xx_dynamic_1.txt, Makespan: 1090
-Instanță: setb4c9_dynamic_1.txt, Makespan: 1682
-Instanță: seti5x_dynamic_1.txt, Makespan: 2203
-Instanță: seti5c12_dynamic_1.txt, Makespan: 1951
-Instanță: seti5xx_dynamic_1.txt, Makespan: 1811
 
-Media makespan: 1522.48
+=== Indiv 1 ===
+mul(neg(RPT), add(RO, MW))
+Expression: mul(neg(RPT), add(RO, MW))setb4cc_dynamic_1.txt: MS=1375
+seti5xy_dynamic_1.txt: MS=1614
+mt10c1_dynamic_1.txt: MS=1486
+mt10xy_dynamic_1.txt: MS=1141
+mt10cc_dynamic_1.txt: MS=1320
+mt10xxx_dynamic_1.txt: MS=1573
+setb4x_dynamic_1.txt: MS=1583
+setb4xy_dynamic_1.txt: MS=1597
+seti5xyz_dynamic_1.txt: MS=1965
+setb4xxx_dynamic_1.txt: MS=1775
+seti5cc_dynamic_1.txt: MS=2166
+seti5xxx_dynamic_1.txt: MS=1508
+setb4xx_dynamic_1.txt: MS=1263
+mt10x_dynamic_1.txt: MS=1555
+setb4xyz_dynamic_1.txt: MS=1506
+mt10xyz_dynamic_1.txt: MS=1229
+mt10xx_dynamic_1.txt: MS=1580
+setb4c9_dynamic_1.txt: MS=1466
+seti5x_dynamic_1.txt: MS=1961
+seti5c12_dynamic_1.txt: MS=1820
+seti5xx_dynamic_1.txt: MS=1945
+Average MS: 1591.81
+
+=== Indiv 2 ===
+neg(neg(sub(neg(RO), max(MW, MW))))
+Expression: neg(neg(sub(neg(RO), max(MW, MW))))setb4cc_dynamic_1.txt: MS=1145
+seti5xy_dynamic_1.txt: MS=1738
+mt10c1_dynamic_1.txt: MS=1420
+mt10xy_dynamic_1.txt: MS=1164
+mt10cc_dynamic_1.txt: MS=1320
+mt10xxx_dynamic_1.txt: MS=1500
+setb4x_dynamic_1.txt: MS=1553
+setb4xy_dynamic_1.txt: MS=1587
+seti5xyz_dynamic_1.txt: MS=1994
+setb4xxx_dynamic_1.txt: MS=1822
+seti5cc_dynamic_1.txt: MS=1897
+seti5xxx_dynamic_1.txt: MS=1500
+setb4xx_dynamic_1.txt: MS=1196
+mt10x_dynamic_1.txt: MS=1581
+setb4xyz_dynamic_1.txt: MS=1508
+mt10xyz_dynamic_1.txt: MS=1252
+mt10xx_dynamic_1.txt: MS=1580
+setb4c9_dynamic_1.txt: MS=1568
+seti5x_dynamic_1.txt: MS=1961
+seti5c12_dynamic_1.txt: MS=1809
+seti5xx_dynamic_1.txt: MS=2273
+Average MS: 1588.95
+
+=== Indiv 3 ===
+mul(WIP, add(protected_div(add(1.0, RPT), sub(WIP, TQ)), MW))
+Expression: mul(WIP, add(protected_div(add(1.0, RPT), sub(WIP, TQ)), MW))setb4cc_dynamic_1.txt: MS=1532
+seti5xy_dynamic_1.txt: MS=1710
+mt10c1_dynamic_1.txt: MS=1486
+mt10xy_dynamic_1.txt: MS=1164
+mt10cc_dynamic_1.txt: MS=1318
+mt10xxx_dynamic_1.txt: MS=1223
+setb4x_dynamic_1.txt: MS=1541
+setb4xy_dynamic_1.txt: MS=1583
+seti5xyz_dynamic_1.txt: MS=2226
+setb4xxx_dynamic_1.txt: MS=1819
+seti5cc_dynamic_1.txt: MS=1899
+seti5xxx_dynamic_1.txt: MS=1486
+setb4xx_dynamic_1.txt: MS=1281
+mt10x_dynamic_1.txt: MS=1504
+setb4xyz_dynamic_1.txt: MS=1466
+mt10xyz_dynamic_1.txt: MS=1304
+mt10xx_dynamic_1.txt: MS=1368
+setb4c9_dynamic_1.txt: MS=1252
+seti5x_dynamic_1.txt: MS=2020
+seti5c12_dynamic_1.txt: MS=2054
+seti5xx_dynamic_1.txt: MS=2011
+Average MS: 1583.19
+
+=== Indiv 4 ===
+mul(neg(RPT), add(mul(add(PT, TQ), protected_div(WIP, RO)), MW))
+Expression: mul(neg(RPT), add(mul(add(PT, TQ), protected_div(WIP, RO)), MW))setb4cc_dynamic_1.txt: MS=1184
+seti5xy_dynamic_1.txt: MS=1718
+mt10c1_dynamic_1.txt: MS=1449
+mt10xy_dynamic_1.txt: MS=1164
+mt10cc_dynamic_1.txt: MS=1430
+mt10xxx_dynamic_1.txt: MS=1735
+setb4x_dynamic_1.txt: MS=1645
+setb4xy_dynamic_1.txt: MS=1635
+seti5xyz_dynamic_1.txt: MS=2211
+setb4xxx_dynamic_1.txt: MS=1822
+seti5cc_dynamic_1.txt: MS=2034
+seti5xxx_dynamic_1.txt: MS=1596
+setb4xx_dynamic_1.txt: MS=1274
+mt10x_dynamic_1.txt: MS=1581
+setb4xyz_dynamic_1.txt: MS=1679
+mt10xyz_dynamic_1.txt: MS=1243
+mt10xx_dynamic_1.txt: MS=1621
+setb4c9_dynamic_1.txt: MS=1676
+seti5x_dynamic_1.txt: MS=2285
+seti5c12_dynamic_1.txt: MS=1831
+seti5xx_dynamic_1.txt: MS=2056
+Average MS: 1660.43
+
+=== Indiv 5 ===
+neg(min(TQ, WIP))
+Expression: neg(min(TQ, WIP))setb4cc_dynamic_1.txt: MS=1230
+seti5xy_dynamic_1.txt: MS=1724
+mt10c1_dynamic_1.txt: MS=1508
+mt10xy_dynamic_1.txt: MS=1104
+mt10cc_dynamic_1.txt: MS=1248
+mt10xxx_dynamic_1.txt: MS=1559
+setb4x_dynamic_1.txt: MS=1622
+setb4xy_dynamic_1.txt: MS=1660
+seti5xyz_dynamic_1.txt: MS=2333
+setb4xxx_dynamic_1.txt: MS=1916
+seti5cc_dynamic_1.txt: MS=1955
+seti5xxx_dynamic_1.txt: MS=1580
+setb4xx_dynamic_1.txt: MS=1236
+mt10x_dynamic_1.txt: MS=1626
+setb4xyz_dynamic_1.txt: MS=1654
+mt10xyz_dynamic_1.txt: MS=1308
+mt10xx_dynamic_1.txt: MS=1839
+setb4c9_dynamic_1.txt: MS=1501
+seti5x_dynamic_1.txt: MS=2138
+seti5c12_dynamic_1.txt: MS=1776
+seti5xx_dynamic_1.txt: MS=2011
+Average MS: 1644.19

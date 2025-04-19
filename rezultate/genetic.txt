@@ -1,0 +1,135 @@
+
+=== Individual 1 ===
+Fitness_train: 1577.5476
+Expression: min(mul(max(PT, TQ), add(TQ, 1.0)), add(protected_div(PT, TQ), add(WIP, add(min(min(PT, RPT), neg(RPT)), sub(max(RO, RO), neg(RO))))))
+setb4cc_dynamic_1.txt: MS=1192, T=0.006s
+seti5xy_dynamic_1.txt: MS=1653, T=0.019s
+mt10c1_dynamic_1.txt: MS=1408, T=0.009s
+mt10xy_dynamic_1.txt: MS=1137, T=0.006s
+mt10cc_dynamic_1.txt: MS=1368, T=4.220s
+mt10xxx_dynamic_1.txt: MS=1691, T=0.013s
+setb4x_dynamic_1.txt: MS=1583, T=0.009s
+setb4xy_dynamic_1.txt: MS=1660, T=4.323s
+seti5xyz_dynamic_1.txt: MS=2062, T=7.328s
+setb4xxx_dynamic_1.txt: MS=1775, T=0.013s
+seti5cc_dynamic_1.txt: MS=1929, T=0.020s
+seti5xxx_dynamic_1.txt: MS=1513, T=0.018s
+setb4xx_dynamic_1.txt: MS=1230, T=0.007s
+mt10x_dynamic_1.txt: MS=1555, T=0.010s
+setb4xyz_dynamic_1.txt: MS=1539, T=0.012s
+mt10xyz_dynamic_1.txt: MS=1158, T=4.683s
+mt10xx_dynamic_1.txt: MS=1580, T=0.011s
+setb4c9_dynamic_1.txt: MS=1606, T=0.008s
+seti5x_dynamic_1.txt: MS=1961, T=6.481s
+seti5c12_dynamic_1.txt: MS=1778, T=0.019s
+seti5xx_dynamic_1.txt: MS=1933, T=6.922s
+Average_MS: 1586.24
+Average_T : 1.625s
+
+=== Individual 2 ===
+Fitness_train: 1579.7381
+Expression: min(mul(max(PT, TQ), add(TQ, PT)), add(protected_div(PT, TQ), add(WIP, 1.0)))
+setb4cc_dynamic_1.txt: MS=1123, T=0.005s
+seti5xy_dynamic_1.txt: MS=1655, T=0.019s
+mt10c1_dynamic_1.txt: MS=1361, T=0.008s
+mt10xy_dynamic_1.txt: MS=995, T=0.005s
+mt10cc_dynamic_1.txt: MS=1390, T=4.258s
+mt10xxx_dynamic_1.txt: MS=1269, T=0.009s
+setb4x_dynamic_1.txt: MS=1403, T=0.007s
+setb4xy_dynamic_1.txt: MS=1570, T=4.232s
+seti5xyz_dynamic_1.txt: MS=2211, T=7.169s
+setb4xxx_dynamic_1.txt: MS=1860, T=0.013s
+seti5cc_dynamic_1.txt: MS=1772, T=0.016s
+seti5xxx_dynamic_1.txt: MS=1473, T=0.016s
+setb4xx_dynamic_1.txt: MS=1283, T=0.007s
+mt10x_dynamic_1.txt: MS=1429, T=0.007s
+setb4xyz_dynamic_1.txt: MS=1577, T=0.011s
+mt10xyz_dynamic_1.txt: MS=1295, T=4.587s
+mt10xx_dynamic_1.txt: MS=1486, T=0.008s
+setb4c9_dynamic_1.txt: MS=1632, T=0.008s
+seti5x_dynamic_1.txt: MS=2193, T=6.039s
+seti5c12_dynamic_1.txt: MS=1846, T=0.020s
+seti5xx_dynamic_1.txt: MS=1944, T=6.583s
+Average_MS: 1560.33
+Average_T : 1.573s
+
+=== Individual 3 ===
+Fitness_train: 1594.0000
+Expression: min(mul(max(min(WIP, MW), TQ), add(TQ, PT)), add(protected_div(PT, TQ), add(WIP, 1.0)))
+setb4cc_dynamic_1.txt: MS=1163, T=0.006s
+seti5xy_dynamic_1.txt: MS=1642, T=0.018s
+mt10c1_dynamic_1.txt: MS=1313, T=0.007s
+mt10xy_dynamic_1.txt: MS=1079, T=0.006s
+mt10cc_dynamic_1.txt: MS=1298, T=4.209s
+mt10xxx_dynamic_1.txt: MS=1290, T=0.009s
+setb4x_dynamic_1.txt: MS=1403, T=0.007s
+setb4xy_dynamic_1.txt: MS=1570, T=4.339s
+seti5xyz_dynamic_1.txt: MS=2211, T=6.902s
+setb4xxx_dynamic_1.txt: MS=1771, T=0.012s
+seti5cc_dynamic_1.txt: MS=1815, T=0.017s
+seti5xxx_dynamic_1.txt: MS=1418, T=0.014s
+setb4xx_dynamic_1.txt: MS=1294, T=0.007s
+mt10x_dynamic_1.txt: MS=1502, T=0.008s
+setb4xyz_dynamic_1.txt: MS=1570, T=0.011s
+mt10xyz_dynamic_1.txt: MS=1295, T=4.688s
+mt10xx_dynamic_1.txt: MS=1498, T=0.009s
+setb4c9_dynamic_1.txt: MS=1651, T=0.008s
+seti5x_dynamic_1.txt: MS=2165, T=0.016s
+seti5c12_dynamic_1.txt: MS=1811, T=0.020s
+seti5xx_dynamic_1.txt: MS=1990, T=6.510s
+Average_MS: 1559.48
+Average_T : 1.277s
+
+=== Individual 4 ===
+Fitness_train: 1616.4524
+Expression: neg(mul(TQ, RO))
+setb4cc_dynamic_1.txt: MS=1375, T=0.008s
+seti5xy_dynamic_1.txt: MS=1688, T=0.019s
+mt10c1_dynamic_1.txt: MS=1468, T=0.009s
+mt10xy_dynamic_1.txt: MS=1148, T=0.007s
+mt10cc_dynamic_1.txt: MS=1452, T=4.261s
+mt10xxx_dynamic_1.txt: MS=1339, T=0.010s
+setb4x_dynamic_1.txt: MS=1449, T=0.008s
+setb4xy_dynamic_1.txt: MS=1632, T=4.182s
+seti5xyz_dynamic_1.txt: MS=1991, T=7.453s
+setb4xxx_dynamic_1.txt: MS=1842, T=0.014s
+seti5cc_dynamic_1.txt: MS=1982, T=0.019s
+seti5xxx_dynamic_1.txt: MS=1404, T=0.014s
+setb4xx_dynamic_1.txt: MS=1253, T=0.006s
+mt10x_dynamic_1.txt: MS=1591, T=0.009s
+setb4xyz_dynamic_1.txt: MS=1545, T=0.011s
+mt10xyz_dynamic_1.txt: MS=1243, T=4.624s
+mt10xx_dynamic_1.txt: MS=1580, T=0.011s
+setb4c9_dynamic_1.txt: MS=1342, T=0.006s
+seti5x_dynamic_1.txt: MS=1961, T=5.981s
+seti5c12_dynamic_1.txt: MS=1765, T=0.019s
+seti5xx_dynamic_1.txt: MS=2273, T=6.911s
+Average_MS: 1586.81
+Average_T : 1.599s
+
+=== Individual 5 ===
+Fitness_train: 1645.5952
+Expression: neg(min(min(WIP, MW), sub(PT, PT)))
+setb4cc_dynamic_1.txt: MS=1230, T=0.007s
+seti5xy_dynamic_1.txt: MS=1814, T=0.020s
+mt10c1_dynamic_1.txt: MS=1508, T=0.009s
+mt10xy_dynamic_1.txt: MS=1103, T=0.006s
+mt10cc_dynamic_1.txt: MS=1301, T=4.275s
+mt10xxx_dynamic_1.txt: MS=1559, T=0.012s
+setb4x_dynamic_1.txt: MS=1622, T=0.009s
+setb4xy_dynamic_1.txt: MS=1660, T=4.191s
+seti5xyz_dynamic_1.txt: MS=2333, T=7.732s
+setb4xxx_dynamic_1.txt: MS=1877, T=0.014s
+seti5cc_dynamic_1.txt: MS=1972, T=0.020s
+seti5xxx_dynamic_1.txt: MS=1619, T=0.019s
+setb4xx_dynamic_1.txt: MS=1248, T=0.006s
+mt10x_dynamic_1.txt: MS=1626, T=0.009s
+setb4xyz_dynamic_1.txt: MS=1654, T=0.013s
+mt10xyz_dynamic_1.txt: MS=1308, T=4.731s
+mt10xx_dynamic_1.txt: MS=1839, T=0.012s
+setb4c9_dynamic_1.txt: MS=1466, T=0.007s
+seti5x_dynamic_1.txt: MS=2138, T=0.017s
+seti5c12_dynamic_1.txt: MS=1756, T=0.018s
+seti5xx_dynamic_1.txt: MS=1944, T=6.477s
+Average_MS: 1646.52
+Average_T : 1.314s

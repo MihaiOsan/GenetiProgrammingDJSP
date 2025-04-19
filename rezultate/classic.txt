@@ -1,0 +1,242 @@
+
+=== Instanța: setb4cc_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => MS=1784, T=0.022s
+LPT => MS=1775, T=0.024s
+FIFO => MS=1760, T=0.023s
+LIFO => MS=1830, T=0.024s
+SRPT => MS=1906, T=0.025s
+OPR => MS=1834, T=0.023s
+ECT => MS=1850, T=0.024s
+LLM => MS=1760, T=0.022s
+Random => MS=1852, T=0.025s
+
+=== Instanța: seti5xy_dynamic_1.txt (jobs=15, machines=17) ===
+SPT => MS=2691, T=0.053s
+LPT => MS=2769, T=0.059s
+FIFO => MS=2632, T=0.054s
+LIFO => MS=2734, T=0.056s
+SRPT => MS=2731, T=0.057s
+OPR => MS=2766, T=0.057s
+ECT => MS=2731, T=0.057s
+LLM => MS=2632, T=0.053s
+Random => MS=2667, T=0.056s
+
+=== Instanța: mt10c1_dynamic_1.txt (jobs=10, machines=11) ===
+SPT => MS=1667, T=0.019s
+LPT => MS=1808, T=0.022s
+FIFO => MS=1689, T=0.020s
+LIFO => MS=1702, T=0.024s
+SRPT => MS=1796, T=0.021s
+OPR => MS=1903, T=0.022s
+ECT => MS=1796, T=0.021s
+LLM => MS=1689, T=0.020s
+Random => MS=1675, T=0.020s
+
+=== Instanța: mt10xy_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => MS=1650, T=0.020s
+LPT => MS=1764, T=0.023s
+FIFO => MS=1657, T=0.021s
+LIFO => MS=1595, T=0.020s
+SRPT => MS=1836, T=0.022s
+OPR => MS=1858, T=0.024s
+ECT => MS=1836, T=0.022s
+LLM => MS=1657, T=0.021s
+Random => MS=1687, T=0.021s
+
+=== Instanța: mt10cc_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => MS=1248, T=0.014s
+LPT => MS=1455, T=0.018s
+FIFO => MS=1411, T=0.017s
+LIFO => MS=1411, T=0.017s
+SRPT => MS=1440, T=0.017s
+OPR => MS=1411, T=0.017s
+ECT => MS=1440, T=0.017s
+LLM => MS=1411, T=0.017s
+Random => MS=1440, T=0.016s
+
+=== Instanța: mt10xxx_dynamic_1.txt (jobs=10, machines=13) ===
+SPT => MS=1538, T=0.021s
+LPT => MS=1837, T=0.027s
+FIFO => MS=1728, T=0.025s
+LIFO => MS=1759, T=0.025s
+SRPT => MS=1843, T=0.026s
+OPR => MS=1738, T=0.024s
+ECT => MS=1843, T=0.026s
+LLM => MS=1728, T=0.025s
+Random => MS=1768, T=0.025s
+
+=== Instanța: setb4x_dynamic_1.txt (jobs=15, machines=11) ===
+SPT => MS=1795, T=0.022s
+LPT => MS=1884, T=0.024s
+FIFO => MS=1783, T=0.022s
+LIFO => MS=1959, T=0.024s
+SRPT => MS=1940, T=0.025s
+OPR => MS=1795, T=0.022s
+ECT => MS=1940, T=0.024s
+LLM => MS=1783, T=0.022s
+Random => MS=1889, T=0.023s
+
+=== Instanța: setb4xy_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => MS=1705, T=0.022s
+LPT => MS=1736, T=0.024s
+FIFO => MS=1689, T=0.023s
+LIFO => MS=1689, T=0.022s
+SRPT => MS=1799, T=0.024s
+OPR => MS=1636, T=0.021s
+ECT => MS=1799, T=0.024s
+LLM => MS=1689, T=0.023s
+Random => MS=1604, T=0.021s
+
+=== Instanța: seti5xyz_dynamic_1.txt (jobs=15, machines=18) ===
+SPT => MS=2324, T=0.047s
+LPT => MS=2368, T=0.050s
+FIFO => MS=1996, T=0.041s
+LIFO => MS=1996, T=0.041s
+SRPT => MS=2213, T=0.046s
+OPR => MS=2356, T=0.049s
+ECT => MS=2213, T=0.046s
+LLM => MS=1996, T=0.058s
+Random => MS=2413, T=0.053s
+
+=== Instanța: setb4xxx_dynamic_1.txt (jobs=15, machines=13) ===
+SPT => MS=2071, T=0.030s
+LPT => MS=1985, T=0.032s
+FIFO => MS=1996, T=0.029s
+LIFO => MS=2056, T=0.032s
+SRPT => MS=2049, T=0.031s
+OPR => MS=2068, T=0.031s
+ECT => MS=2049, T=0.032s
+LLM => MS=1996, T=0.030s
+Random => MS=1985, T=0.031s
+
+=== Instanța: seti5cc_dynamic_1.txt (jobs=15, machines=17) ===
+SPT => MS=2167, T=0.041s
+LPT => MS=2389, T=0.059s
+FIFO => MS=1938, T=0.039s
+LIFO => MS=2127, T=0.042s
+SRPT => MS=2290, T=0.043s
+OPR => MS=2290, T=0.045s
+ECT => MS=2290, T=0.043s
+LLM => MS=1938, T=0.038s
+Random => MS=2152, T=0.045s
+
+=== Instanța: seti5xxx_dynamic_1.txt (jobs=15, machines=18) ===
+SPT => MS=2468, T=0.052s
+LPT => MS=2182, T=0.048s
+FIFO => MS=2612, T=0.054s
+LIFO => MS=2612, T=0.054s
+SRPT => MS=2612, T=0.057s
+OPR => MS=2612, T=0.057s
+ECT => MS=2612, T=0.055s
+LLM => MS=2612, T=0.054s
+Random => MS=2182, T=0.047s
+
+=== Instanța: setb4xx_dynamic_1.txt (jobs=15, machines=12) ===
+SPT => MS=1553, T=0.020s
+LPT => MS=1625, T=0.022s
+FIFO => MS=1929, T=0.025s
+LIFO => MS=1929, T=0.025s
+SRPT => MS=1553, T=0.019s
+OPR => MS=1889, T=0.024s
+ECT => MS=1553, T=0.019s
+LLM => MS=1929, T=0.025s
+Random => MS=1519, T=0.019s
+
+=== Instanța: mt10x_dynamic_1.txt (jobs=10, machines=11) ===
+SPT => MS=1518, T=0.017s
+LPT => MS=1727, T=0.022s
+FIFO => MS=1754, T=0.022s
+LIFO => MS=1990, T=0.024s
+SRPT => MS=1627, T=0.019s
+OPR => MS=1801, T=0.022s
+ECT => MS=1627, T=0.019s
+LLM => MS=1754, T=0.023s
+Random => MS=1757, T=0.021s
+
+=== Instanța: setb4xyz_dynamic_1.txt (jobs=15, machines=13) ===
+SPT => MS=1962, T=0.029s
+LPT => MS=1722, T=0.027s
+FIFO => MS=1916, T=0.030s
+LIFO => MS=1884, T=0.029s
+SRPT => MS=1928, T=0.029s
+OPR => MS=1981, T=0.030s
+ECT => MS=1928, T=0.029s
+LLM => MS=1916, T=0.030s
+Random => MS=1852, T=0.029s
+
+=== Instanța: mt10xyz_dynamic_1.txt (jobs=10, machines=13) ===
+SPT => MS=1267, T=0.016s
+LPT => MS=1275, T=0.018s
+FIFO => MS=1272, T=0.016s
+LIFO => MS=1272, T=0.018s
+SRPT => MS=1331, T=0.016s
+OPR => MS=1361, T=0.017s
+ECT => MS=1331, T=0.017s
+LLM => MS=1272, T=0.017s
+Random => MS=1239, T=0.016s
+
+=== Instanța: mt10xx_dynamic_1.txt (jobs=10, machines=12) ===
+SPT => MS=1446, T=0.017s
+LPT => MS=1684, T=0.022s
+FIFO => MS=1618, T=0.020s
+LIFO => MS=1618, T=0.020s
+SRPT => MS=1734, T=0.020s
+OPR => MS=1652, T=0.020s
+ECT => MS=1734, T=0.020s
+LLM => MS=1618, T=0.020s
+Random => MS=1681, T=0.021s
+
+=== Instanța: setb4c9_dynamic_1.txt (jobs=15, machines=11) ===
+SPT => MS=2037, T=0.024s
+LPT => MS=1858, T=0.023s
+FIFO => MS=1705, T=0.020s
+LIFO => MS=1705, T=0.020s
+SRPT => MS=1990, T=0.024s
+OPR => MS=2026, T=0.025s
+ECT => MS=1990, T=0.024s
+LLM => MS=1705, T=0.020s
+Random => MS=1795, T=0.021s
+
+=== Instanța: seti5x_dynamic_1.txt (jobs=15, machines=16) ===
+SPT => MS=1962, T=0.033s
+LPT => MS=2311, T=0.042s
+FIFO => MS=2255, T=0.040s
+LIFO => MS=2255, T=0.039s
+SRPT => MS=2402, T=0.042s
+OPR => MS=2255, T=0.040s
+ECT => MS=2402, T=0.042s
+LLM => MS=2255, T=0.040s
+Random => MS=2295, T=0.055s
+
+=== Instanța: seti5c12_dynamic_1.txt (jobs=15, machines=16) ===
+SPT => MS=2514, T=0.054s
+LPT => MS=2416, T=0.049s
+FIFO => MS=2405, T=0.048s
+LIFO => MS=2711, T=0.058s
+SRPT => MS=2711, T=0.054s
+OPR => MS=2673, T=0.053s
+ECT => MS=2711, T=0.056s
+LLM => MS=2405, T=0.050s
+Random => MS=2379, T=0.048s
+
+=== Instanța: seti5xx_dynamic_1.txt (jobs=15, machines=17) ===
+SPT => MS=1930, T=0.036s
+LPT => MS=2299, T=0.044s
+FIFO => MS=2304, T=0.046s
+LIFO => MS=2304, T=0.046s
+SRPT => MS=2275, T=0.043s
+OPR => MS=2299, T=0.044s
+ECT => MS=2275, T=0.049s
+LLM => MS=2304, T=0.046s
+Random => MS=1970, T=0.039s
+
+=== Average per rule ===
+SPT: MS=1871.29, T=0.029s
+LPT: MS=1946.14, T=0.032s
+FIFO: MS=1907.10, T=0.030s
+LIFO: MS=1958.95, T=0.032s
+SRPT: MS=2000.29, T=0.031s
+OPR: MS=2009.71, T=0.032s
+ECT: MS=1997.62, T=0.032s
+LLM: MS=1907.10, T=0.031s
+Random: MS=1895.29, T=0.031s

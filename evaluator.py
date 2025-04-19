@@ -1,4 +1,5 @@
 import copy
+import operator
 from deap import tools, algorithms, gp
 import random as rd
 
@@ -24,26 +25,32 @@ def multi_instance_fitness(individual, instances, toolbox):
         total_makespan += ms
     return (total_makespan / len(instances),)
 
-def run_genetic_program(instances, toolbox, ngen=10, pop_size=20):
+def run_genetic_program(instances, toolbox, ngen=10, pop_size=20, halloffame = 1 ):
     """
     Rulează GP-ul pe instanțele date.
     `toolbox` trebuie să fie deja configurat cu operatorii DEAP.
     """
     # Adăugăm evaluarea și ceilalți operatori
+
+    MAX_DEPTH = 8
+
     print("Running genetic program...")
     toolbox.register("evaluate", multi_instance_fitness, instances=instances, toolbox=toolbox)
     toolbox.register("select", tools.selTournament, tournsize=3)
     toolbox.register("mate", gp.cxOnePoint)
     toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr, pset=toolbox.pset)
+    # Apply static limit to prevent bloat
+    toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=MAX_DEPTH))
+    toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=MAX_DEPTH))
 
     # Inițializăm populația
     pop = toolbox.population(n=pop_size)
-    hof = tools.HallOfFame(1)
+    hof = tools.HallOfFame(halloffame)
 
     algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.3, ngen=ngen,
                         halloffame=hof, verbose=True)
 
-    return hof[0]
+    return hof
 
 '''def run_genetic_program_subsample(instances, toolbox,
                                      ngen=10, pop_size=20,

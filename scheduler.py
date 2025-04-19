@@ -52,13 +52,13 @@ def evaluate_individual(individual, jobs, num_machines, events, toolbox, max_tim
     # ------------------------------------------------------------
     # 3) Inițializare stări
     # ------------------------------------------------------------
-    # (A) Creăm mașinile cu ID clar
+    # (A) Creăm mașinile
     machines = [MachineState(m) for m in range(num_machines)]
 
     # (B) Timpul de final pentru fiecare job
     job_end_time = [0.0] * len(jobs)
 
-    # (C) Calculăm lungimea joburilor pentru a nu face len(jobs[j]) de zeci de ori
+    # (C) Calculăm lungimea joburilor
     len_jobs = [len(job) for job in jobs]
 
     # (D) Operații pregătite => set, plus un dict pt moment ready_time
@@ -147,7 +147,7 @@ def evaluate_individual(individual, jobs, num_machines, events, toolbox, max_tim
             # local var
             m_id = machine.id
 
-            # mașina e defectă?
+            # mașina e defectă
             if machine.broken_until > current_time:
                 continue
 
@@ -172,7 +172,7 @@ def evaluate_individual(individual, jobs, num_machines, events, toolbox, max_tim
             if not machine.busy and machine.broken_until <= current_time:
                 WIP_val = sum(1 for m2 in machines if m2.busy)
                 MW_val = current_time - machine.idle_since
-                TUF = max(0, machine.broken_until - current_time)
+                #TUF = max(0, machine.broken_until - current_time)
 
                 best_candidate = None
                 best_priority = float('inf')
@@ -194,7 +194,7 @@ def evaluate_individual(individual, jobs, num_machines, events, toolbox, max_tim
                         RPT_val = compute_rpt(jj, oo)
                         priority = dispatch_rule(
                             PT_val, RO_val, MW_val, TQ_val,
-                            WIP_val, RPT_val, TUF
+                            WIP_val, RPT_val
                         )
 
                         if priority < best_priority:
