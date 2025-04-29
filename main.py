@@ -1,19 +1,11 @@
-"""Rule‑learning workflow:
-1. Antrenează GP pe instanțele din <train_dir>.
-2. Extrage cei mai buni 5 indivizi din Hall‑of‑Fame.
-3. Evaluează **fiecare** dintre ei pe instanțele de test și raportează rezultatele.
-
-NOTĂ: Presupune că utilitarele existente (load_instances_from_directory,
-      run_genetic_program, evaluate_individual etc.) funcționează la fel
-      ca în varianta anterioară.
-"""
-
 from __future__ import annotations
 
 import os
 import copy
 import time
 from pathlib import Path
+from collections import defaultdict
+from typing import List, Dict, Tuple
 
 from data_reader import load_instances_from_directory
 from evaluator    import evaluate_individual
@@ -26,19 +18,79 @@ from evaluator    import run_genetic_program  # dacă numele e diferit, ajusteaz
 # ---------------------------------------------------------------------------
 TRAIN_DIR = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/train/barnes")
 TEST_DIR  = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/test/barnes")
-POP_SIZE  = 5
-N_GENERATIONS = 1
-N_WORKERS = 3  # trece la create_toolbox(np=N_WORKERS)
-MAX_HOF   = 5  # câți păstrăm în Hall‑of‑Fame
+POP_SIZE  = 40
+N_GENERATIONS = 15
+N_WORKERS = 5         # trece la create_toolbox(np=N_WORKERS)
+MAX_HOF   = 5         # câți păstrăm în Hall-of-Fame
 
 RESULTS_FILE = "rezultate/genetic.txt"
 GANTT_DIR    = Path("gantt_outputs/genetic")
 GANTT_DIR.mkdir(exist_ok=True)
 
+# ----------------------------------------------------------
+#  Ordinea câmpurilor într-un tuplu din `schedule`
+TUPLE_FIELDS = {
+    "job":     0,
+    "op":      1,
+    "machine": 2,
+    "start":   3,
+    "end":     4,
+}
+
+def field(op, name: str):
+    """Returnează câmpul `name` dintr-un op (dict sau tuple)."""
+    if isinstance(op, dict):
+        return op[name]
+    return op[TUPLE_FIELDS[name]]
+# ----------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+#  UTILITARE METRICE
+# ---------------------------------------------------------------------------
+def calc_machine_idle_time(sched: List) -> Tuple[float, float]:
+    ops_by_m = defaultdict(list)
+    for op in sched:
+        ops_by_m[field(op, "machine")].append(
+            (field(op, "start"), field(op, "end"))
+        )
+
+    idle_total = 0.0
+    for ops in ops_by_m.values():
+        ops.sort(key=lambda x: x[0])          # sortăm după start
+        prev_end = 0.0
+        for st, en in ops:
+            idle_total += max(0.0, st - prev_end)
+            prev_end = en
+        makespan_m = max(e for _, e in ops)   # ultimul end pe mașină
+        idle_total += max(0.0, makespan_m - prev_end)
+
+    idle_avg = idle_total / len(ops_by_m) if ops_by_m else 0.0
+    return idle_total, idle_avg
+
+
+def calc_job_waiting_time(sched: List) -> Tuple[float, float]:
+    ops_by_j = defaultdict(list)
+    for op in sched:
+        ops_by_j[field(op, "job")].append(
+            (field(op, "start"), field(op, "end"))
+        )
+
+    wait_total = 0.0
+    for ops in ops_by_j.values():
+        ops.sort(key=lambda x: x[0])
+        prev_end = 0.0
+        for st, en in ops:
+            wait_total += max(0.0, st - prev_end)
+            prev_end = en
+
+    wait_avg = wait_total / len(ops_by_j) if ops_by_j else 0.0
+    return wait_total, wait_avg
+
+
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
-
 def main() -> None:
     global_start = time.time()
 
@@ -49,7 +101,7 @@ def main() -> None:
     # 2) Toolbox
     toolbox = create_toolbox(np=N_WORKERS)
 
-    # 3) GP training ⇒ Hall‑of‑Fame (top 5)
+    # 3) GP training ⇒ Hall-of-Fame (top 5)
     print("\n=== GP TRAINING ===")
     hof = run_genetic_program(
         train_insts,
@@ -60,7 +112,7 @@ def main() -> None:
     )
     best_5: List = list(hof)[:MAX_HOF]
 
-    print("Top 5 indivizi (fitness):")
+    print("Top 5 indivizi (fitness):")
     for idx, ind in enumerate(best_5, 1):
         fit_val = ind.fitness.values[0] if ind.fitness.valid else float("inf")
         print(f"  {idx}: {fit_val:.4f}  ->  {ind}")
@@ -78,7 +130,9 @@ def main() -> None:
             print(f"\n=== Testing Individual {rank}/{MAX_HOF} (fitness={ind_fit:.4f}) ===")
             print(f"Expr: {rule_str}")
 
-            sum_ms   = 0.0
+            sum_ms = 0.0
+            sum_idle = 0.0
+            sum_wait = 0.0
             time_vals: List[float] = []
 
             for jobs, nm, ev, fname in test_insts:
@@ -93,11 +147,27 @@ def main() -> None:
                 ms, sched = evaluate_individual(ind, jb_cp, nm, ev_cp, toolbox)
                 elapsed = time.perf_counter() - t0
 
-                sum_ms += ms
+                # --- metrice suplimentare -----------------------------------
+                idle_total, idle_avg = calc_machine_idle_time(sched)
+                wait_total, wait_avg = calc_job_waiting_time(sched)
+                # -------------------------------------------------------------
+
+                sum_ms   += ms
+                sum_idle += idle_avg
+                sum_wait += wait_avg
                 time_vals.append(elapsed)
 
-                outf.write(f"{fname}: MS={ms}, T={elapsed:.3f}s\n")
-                print(f"  {fname}: MS={ms}, T={elapsed:.3f}s")
+                outf.write(f"{fname}: "
+                           f"MS={ms}, "
+                           f"Idle_avg={idle_avg:.2f}, "
+                           f"Wait_avg={wait_avg:.2f}, "
+                           f"T={elapsed:.3f}s\n")
+
+                print(f"  {fname}: "
+                      f"MS={ms:<6} | "
+                      f"Idle_avg={idle_avg:>7.2f} | "
+                      f"Wait_avg={wait_avg:>7.2f} | "
+                      f"T={elapsed:.3f}s")
 
                 # Gantt (opţional)
                 gantt_name = f"{Path(fname).stem}_ind{rank}.png"
@@ -105,12 +175,23 @@ def main() -> None:
                            title=f"{fname} – ind{rank} (MS={ms})",
                            save_path=GANTT_DIR / gantt_name)
 
-            avg_ms   = sum_ms   / len(test_insts) if test_insts else 0.0
-            avg_time = sum(time_vals) / len(time_vals) if time_vals else 0.0
+            n_tests = len(test_insts) or 1
+            avg_ms     = sum_ms   / n_tests
+            avg_idle   = sum_idle / n_tests
+            avg_wait   = sum_wait / n_tests
+            avg_time   = sum(time_vals) / n_tests
 
-            outf.write(f"Average_MS: {avg_ms:.2f}\nAverage_T : {avg_time:.3f}s\n")
-            print(f"  Average MS  = {avg_ms:.2f}")
-            print(f"  Average T   = {avg_time:.3f}s")
+            outf.write("\n--- MEDIA ---\n")
+            outf.write(f"Average_MS   : {avg_ms:.2f}\n"
+                       f"Average_Idle : {avg_idle:.2f}\n"
+                       f"Average_Wait : {avg_wait:.2f}\n"
+                       f"Average_T    : {avg_time:.3f}s\n")
+
+            print("  ------- MEDIA -------")
+            print(f"  Average MS    = {avg_ms:.2f}")
+            print(f"  Average Idle  = {avg_idle:.2f}")
+            print(f"  Average Wait  = {avg_wait:.2f}")
+            print(f"  Average T     = {avg_time:.3f}s")
 
     print(f"\nRezultatele au fost scrise în '{RESULTS_FILE}'.")
     print(f"Durata totală: {time.time() - global_start:.1f}s")
