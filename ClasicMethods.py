@@ -1,11 +1,31 @@
 import os
 import copy
 import random
+from collections import defaultdict
 from typing import List, Dict, Tuple, Any
 import matplotlib.pyplot as plt
 import time
 
 import matplotlib.patches as mpatches
+
+###############################################################################
+# 0) UTILITARE COMUNE ---------------------------------------------------------
+###############################################################################
+#  Tuplul din `schedule` are structura (job, op_idx, machine, start, end)
+TUPLE_FIELDS = {
+    "job": 0,
+    "op": 1,
+    "machine": 2,
+    "start": 3,
+    "end": 4,
+}
+
+def field(op, name: str):
+    """Returnează câmpul `name` dintr‑un op; funcționează atât pentru tuple,
+    cât și pentru dict."""
+    if isinstance(op, dict):
+        return op[name]
+    return op[TUPLE_FIELDS[name]]
 
 ###############################################################################
 # 1) Citire instanță FJSP (dinamic)
@@ -103,6 +123,42 @@ def metric_append(store: Dict[str, List[float]], rule: str, value: float):
 
 def metric_average(store: Dict[str, List[float]]) -> Dict[str, float]:
     return {r: (sum(v)/len(v) if v else 0.0) for r, v in store.items()}
+
+def calc_machine_idle_time(sched: List) -> Tuple[float, float]:
+    """Returnează (idle_total, idle_avg_per_machine)."""
+    ops_by_m = defaultdict(list)
+    for op in sched:
+        ops_by_m[field(op, "machine")].append((field(op, "start"), field(op, "end")))
+
+    idle_total = 0.0
+    for ops in ops_by_m.values():
+        ops.sort(key=lambda x: x[0])
+        prev_end = 0.0
+        for st, en in ops:
+            idle_total += max(0.0, st - prev_end)
+            prev_end = en
+        makespan_m = max(e for _, e in ops)
+        idle_total += max(0.0, makespan_m - prev_end)
+    idle_avg = idle_total / len(ops_by_m) if ops_by_m else 0.0
+    return idle_total, idle_avg
+
+
+def calc_job_waiting_time(sched: List) -> Tuple[float, float]:
+    """Returnează (wait_total, wait_avg_per_job)."""
+    ops_by_j = defaultdict(list)
+    for op in sched:
+        ops_by_j[field(op, "job")].append((field(op, "start"), field(op, "end")))
+
+    wait_total = 0.0
+    for ops in ops_by_j.values():
+        ops.sort(key=lambda x: x[0])
+        prev_end = 0.0
+        for st, en in ops:
+            wait_total += max(0.0, st - prev_end)
+            prev_end = en
+    wait_avg = wait_total / len(ops_by_j) if ops_by_j else 0.0
+    return wait_total, wait_avg
+
 
 ###############################################################################
 # 3) Regulile de prioritizare / tie‑break
@@ -275,8 +331,10 @@ if __name__ == "__main__":
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     RULES = ["SPT", "LPT", "FIFO", "LIFO", "SRPT", "OPR", "ECT", "LLM", "Random"]
-    ms_store   = {r: [] for r in RULES}
-    time_store = {r: [] for r in RULES}   #  NEW: colectăm timpii
+    ms_store    = {r: [] for r in RULES}
+    time_store  = {r: [] for r in RULES}
+    idle_store  = {r: [] for r in RULES}   #  NEW
+    wait_store  = {r: [] for r in RULES}   #  NEW
 
     RESULTS_FILE = "rezultate/classic.txt"
     with open(RESULTS_FILE, "w") as fout:
@@ -296,35 +354,39 @@ if __name__ == "__main__":
                     "cancelled_jobs": list(events["cancelled_jobs"]),
                 }
 
-                t0 = time.perf_counter()                 #  NEW: start cronometru
-                ms, sched = schedule_dynamic_no_parallel(
-                    jb_copy, n_mach, ev_copy, rule
-                )
-                elapsed = time.perf_counter() - t0       #  NEW: timp scurs
+                t0 = time.perf_counter()
+                ms, sched = schedule_dynamic_no_parallel(jb_copy, n_mach, ev_copy, rule)
+                elapsed = time.perf_counter() - t0
+
+                # --- METRICE SUPLIMENTARE ---------------------------------
+                _idle_total, idle_avg = calc_machine_idle_time(sched)
+                _wait_total, wait_avg = calc_job_waiting_time(sched)
+                # -----------------------------------------------------------
 
                 metric_append(ms_store,   rule, ms)
                 metric_append(time_store, rule, elapsed)
+                metric_append(idle_store, rule, idle_avg)
+                metric_append(wait_store, rule, wait_avg)
 
-                fout.write(f"{rule} => MS={ms}, T={elapsed:.3f}s\n")
-                print(      f"{rule} => MS={ms}, T={elapsed:.3f}s")
+                fout.write(f"{rule} => MS={ms}, Idle_avg={idle_avg:.2f}, Wait_avg={wait_avg:.2f}, T={elapsed:.3f}s\n")
+                print(      f"{rule} => MS={ms}, Idle_avg={idle_avg:.2f}, Wait_avg={wait_avg:.2f}, T={elapsed:.3f}s")
 
-                # (plot Gantt identic cu înainte)
                 plot_gantt(
                     sched, n_mach, ev_copy["breakdowns"],
                     title=f"{fname} - {rule} (MS={ms})",
-                    save_path=os.path.join(
-                        OUTPUT_DIR, f"{fname}_{rule}.png".replace(".txt", "")
-                    )
+                    save_path=os.path.join(OUTPUT_DIR, f"{fname}_{rule}.png".replace(".txt", ""))
                 )
 
-        # --- medii ---
+        # --- MEDII PE REGULĂ ---------------------------------------------
         fout.write("\n=== Average per rule ===\n")
         print("\n=== Average per rule ===")
         avg_ms   = metric_average(ms_store)
-        avg_time = metric_average(time_store)             #  NEW
+        avg_time = metric_average(time_store)
+        avg_idle = metric_average(idle_store)
+        avg_wait = metric_average(wait_store)
         for r in RULES:
-            fout.write(f"{r}: MS={avg_ms[r]:.2f}, T={avg_time[r]:.3f}s\n")
-            print(      f"{r}: MS={avg_ms[r]:.2f}, T={avg_time[r]:.3f}s")
+            fout.write(f"{r}: MS={avg_ms[r]:.2f}, Idle={avg_idle[r]:.2f}, Wait={avg_wait[r]:.2f}, T={avg_time[r]:.3f}s\n")
+            print(      f"{r}: MS={avg_ms[r]:.2f}, Idle={avg_idle[r]:.2f}, Wait={avg_wait[r]:.2f}, T={avg_time[r]:.3f}s")
 
     print(f"\nRezultatele au fost scrise în {RESULTS_FILE}")
     print(f"Graficele Gantt se află în directorul '{OUTPUT_DIR}'")

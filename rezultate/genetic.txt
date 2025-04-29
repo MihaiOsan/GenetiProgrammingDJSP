@@ -36,7 +36,7 @@ Expression: protected_div(mul(neg(max(RPT, RPT)), mul(add(WIP, MW), min(WIP, TQ)
 setb4cc_dynamic_1.txt: MS=1146, Idle_avg=295.67, Wait_avg=451.56, T=0.008s
 seti5xy_dynamic_1.txt: MS=1642, Idle_avg=798.71, Wait_avg=815.06, T=0.018s
 mt10c1_dynamic_1.txt: MS=1381, Idle_avg=690.27, Wait_avg=637.09, T=0.008s
-mt10xy_dynamic_1.txt: MS=1054, Idle_avg=499.00, Wait_avg=477.23, T=0.006s
+mt10xy_dynamic_1.txt: MS=1054, Idle_avg=499.00, Wait_avg=477.23, T=0.006sq
 mt10cc_dynamic_1.txt: MS=1248, Idle_avg=565.83, Wait_avg=373.50, T=4.041s
 mt10xxx_dynamic_1.txt: MS=1326, Idle_avg=775.85, Wait_avg=725.42, T=0.010s
 setb4x_dynamic_1.txt: MS=1378, Idle_avg=543.45, Wait_avg=525.68, T=0.007s
