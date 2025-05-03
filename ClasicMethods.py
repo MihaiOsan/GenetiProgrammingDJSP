@@ -8,6 +8,8 @@ import time
 
 import matplotlib.patches as mpatches
 
+from data_reader import read_dynamic_fjsp_instance_json
+
 ###############################################################################
 # 0) UTILITARE COMUNE ---------------------------------------------------------
 ###############################################################################
@@ -299,7 +301,7 @@ def schedule_dynamic_no_parallel(jobs: List,
 # 5) Plot Gantt
 ###############################################################################
 
-def plot_gantt(schedule: List[Tuple[int,int,int,int,int]],
+def plot_gantt(ms, schedule: List[Tuple[int,int,int,int,int]],
                n_machines: int,
                breakdowns: Dict[int,List[Tuple[int,int]]],
                title: str = "Gantt Chart",
@@ -307,7 +309,8 @@ def plot_gantt(schedule: List[Tuple[int,int,int,int,int]],
     fig, ax = plt.subplots(figsize=(10,6))
     for m in range(n_machines):
         for s_bd, e_bd in breakdowns.get(m, []):
-            ax.barh(m, e_bd-s_bd, left=s_bd, height=0.8, color="red", alpha=0.3)
+            if s_bd < ms:
+                ax.barh(m, e_bd-s_bd, left=s_bd, height=0.8, color="red", alpha=0.3)
     cmap = plt.cm.get_cmap("tab10", 10)
     for j, op, mach, s, f in schedule:
         ax.barh(mach, f-s, left=s, color=cmap(j%10), edgecolor="black", height=0.6)
@@ -326,7 +329,7 @@ def plot_gantt(schedule: List[Tuple[int,int,int,int,int]],
 ###############################################################################
 
 if __name__ == "__main__":
-    INPUT_DIR  = "dfjss_inputs_and_generators/dynamic-FJSP-instances/test/barnes"
+    INPUT_DIR  = "dfjss_inputs_and_generators/dynamic-FJSP-instances/test_sets"
     OUTPUT_DIR = "gantt_outputs/classic"
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -339,10 +342,11 @@ if __name__ == "__main__":
     RESULTS_FILE = "rezultate/classic.txt"
     with open(RESULTS_FILE, "w") as fout:
         for fname in os.listdir(INPUT_DIR):
-            if not fname.endswith(".txt"):
-                continue
             fpath = os.path.join(INPUT_DIR, fname)
-            n_jobs, n_mach, jobs, events = read_dynamic_fjsp_instance(fpath)
+            if fname.endswith(".json"):
+                n_jobs, n_mach, jobs, events = read_dynamic_fjsp_instance_json(fpath)
+            else:
+                n_jobs, n_mach, jobs, events = read_dynamic_fjsp_instance(fpath)
             fout.write(f"\n=== Instanța: {fname} (jobs={n_jobs}, machines={n_mach}) ===\n")
             print(f"\n=== Instanța: {fname} ===")
 
@@ -371,7 +375,7 @@ if __name__ == "__main__":
                 fout.write(f"{rule} => MS={ms}, Idle_avg={idle_avg:.2f}, Wait_avg={wait_avg:.2f}, T={elapsed:.3f}s\n")
                 print(      f"{rule} => MS={ms}, Idle_avg={idle_avg:.2f}, Wait_avg={wait_avg:.2f}, T={elapsed:.3f}s")
 
-                plot_gantt(
+                plot_gantt(ms,
                     sched, n_mach, ev_copy["breakdowns"],
                     title=f"{fname} - {rule} (MS={ms})",
                     save_path=os.path.join(OUTPUT_DIR, f"{fname}_{rule}.png".replace(".txt", ""))

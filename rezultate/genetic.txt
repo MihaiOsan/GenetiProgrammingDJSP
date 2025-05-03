@@ -1,155 +1,135 @@
 
 === Individual 1 ===
-Fitness_train: 1483.4762
-Expression: protected_div(mul(neg(max(RPT, RPT)), mul(add(WIP, mul(WIP, 1.0)), min(WIP, TQ))), PT)
-setb4cc_dynamic_1.txt: MS=1146, Idle_avg=295.67, Wait_avg=451.56, T=0.006s
-seti5xy_dynamic_1.txt: MS=1642, Idle_avg=798.71, Wait_avg=815.06, T=0.018s
-mt10c1_dynamic_1.txt: MS=1381, Idle_avg=690.27, Wait_avg=637.09, T=0.008s
-mt10xy_dynamic_1.txt: MS=1054, Idle_avg=499.00, Wait_avg=477.23, T=0.006s
-mt10cc_dynamic_1.txt: MS=1248, Idle_avg=565.83, Wait_avg=373.50, T=4.022s
-mt10xxx_dynamic_1.txt: MS=1326, Idle_avg=775.85, Wait_avg=725.42, T=0.010s
-setb4x_dynamic_1.txt: MS=1378, Idle_avg=543.45, Wait_avg=525.68, T=0.007s
-setb4xy_dynamic_1.txt: MS=1515, Idle_avg=736.83, Wait_avg=639.31, T=4.232s
-seti5xyz_dynamic_1.txt: MS=1994, Idle_avg=1031.72, Wait_avg=802.06, T=7.291s
-setb4xxx_dynamic_1.txt: MS=1625, Idle_avg=676.23, Wait_avg=724.65, T=0.011s
-seti5cc_dynamic_1.txt: MS=1928, Idle_avg=962.00, Wait_avg=777.35, T=0.018s
-seti5xxx_dynamic_1.txt: MS=1467, Idle_avg=698.29, Wait_avg=639.82, T=0.016s
-setb4xx_dynamic_1.txt: MS=1551, Idle_avg=513.67, Wait_avg=588.88, T=4.403s
-mt10x_dynamic_1.txt: MS=1297, Idle_avg=589.55, Wait_avg=503.42, T=0.007s
-setb4xyz_dynamic_1.txt: MS=1544, Idle_avg=754.69, Wait_avg=714.76, T=0.010s
-mt10xyz_dynamic_1.txt: MS=1225, Idle_avg=487.08, Wait_avg=507.50, T=4.674s
-mt10xx_dynamic_1.txt: MS=1377, Idle_avg=564.42, Wait_avg=456.00, T=0.007s
-setb4c9_dynamic_1.txt: MS=1318, Idle_avg=462.27, Wait_avg=586.41, T=0.006s
-seti5x_dynamic_1.txt: MS=2059, Idle_avg=826.94, Wait_avg=629.88, T=6.144s
-seti5c12_dynamic_1.txt: MS=1804, Idle_avg=892.38, Wait_avg=908.00, T=0.019s
-seti5xx_dynamic_1.txt: MS=1933, Idle_avg=841.41, Wait_avg=596.19, T=6.774s
+Fitness_train: 817.5556
+Formula: (max(PT - RO, (min(TQ, min(MW, 1.0))) * MW)) + RO
+Tree: 
+└─ add
+   ├─ max
+   │  ├─ sub
+   │  │  ├─ PT
+   │  │  └─ RO
+   │  └─ mul
+   │     ├─ min
+   │     │  ├─ TQ
+   │     │  └─ min
+   │     │     ├─ MW
+   │     │     └─ 1.0
+   │     └─ MW
+   └─ RO
+
+test_flex_break_0_util0.7_ec0.03.json: MS=501, Idle_avg=125.90, Wait_avg=237.86, T=0.003s
+test_flex_break_1_util0.7_ec0.08.json: MS=489, Idle_avg=119.40, Wait_avg=201.28, T=0.003s
+test_flex_break_2_util0.95_ec0.03.json: MS=384, Idle_avg=50.30, Wait_avg=207.22, T=0.003s
+test_flex_break_3_util0.95_ec0.08.json: MS=363, Idle_avg=42.40, Wait_avg=218.84, T=0.005s
 
 --- MEDIA ---
-Average_MS   : 1514.86
-Average_Idle : 676.49
-Average_Wait : 622.85
-Average_T    : 1.795s
+Average_MS   : 434.25
+Average_Idle : 84.50
+Average_Wait : 216.30
+Average_T    : 0.003s
 
 === Individual 2 ===
-Fitness_train: 1483.4762
-Expression: protected_div(mul(neg(max(RPT, RPT)), mul(add(WIP, MW), min(WIP, TQ))), PT)
-setb4cc_dynamic_1.txt: MS=1146, Idle_avg=295.67, Wait_avg=451.56, T=0.008s
-seti5xy_dynamic_1.txt: MS=1642, Idle_avg=798.71, Wait_avg=815.06, T=0.018s
-mt10c1_dynamic_1.txt: MS=1381, Idle_avg=690.27, Wait_avg=637.09, T=0.008s
-mt10xy_dynamic_1.txt: MS=1054, Idle_avg=499.00, Wait_avg=477.23, T=0.006sq
-mt10cc_dynamic_1.txt: MS=1248, Idle_avg=565.83, Wait_avg=373.50, T=4.041s
-mt10xxx_dynamic_1.txt: MS=1326, Idle_avg=775.85, Wait_avg=725.42, T=0.010s
-setb4x_dynamic_1.txt: MS=1378, Idle_avg=543.45, Wait_avg=525.68, T=0.007s
-setb4xy_dynamic_1.txt: MS=1515, Idle_avg=736.83, Wait_avg=639.31, T=4.088s
-seti5xyz_dynamic_1.txt: MS=1994, Idle_avg=1031.72, Wait_avg=802.06, T=7.109s
-setb4xxx_dynamic_1.txt: MS=1625, Idle_avg=676.23, Wait_avg=724.65, T=0.011s
-seti5cc_dynamic_1.txt: MS=1928, Idle_avg=962.00, Wait_avg=777.35, T=0.018s
-seti5xxx_dynamic_1.txt: MS=1467, Idle_avg=698.29, Wait_avg=639.82, T=0.016s
-setb4xx_dynamic_1.txt: MS=1551, Idle_avg=513.67, Wait_avg=588.88, T=4.193s
-mt10x_dynamic_1.txt: MS=1297, Idle_avg=589.55, Wait_avg=503.42, T=0.007s
-setb4xyz_dynamic_1.txt: MS=1544, Idle_avg=754.69, Wait_avg=714.76, T=0.011s
-mt10xyz_dynamic_1.txt: MS=1225, Idle_avg=487.08, Wait_avg=507.50, T=4.574s
-mt10xx_dynamic_1.txt: MS=1377, Idle_avg=564.42, Wait_avg=456.00, T=0.007s
-setb4c9_dynamic_1.txt: MS=1318, Idle_avg=462.27, Wait_avg=586.41, T=0.006s
-seti5x_dynamic_1.txt: MS=2059, Idle_avg=826.94, Wait_avg=629.88, T=6.171s
-seti5c12_dynamic_1.txt: MS=1804, Idle_avg=892.38, Wait_avg=908.00, T=0.019s
-seti5xx_dynamic_1.txt: MS=1933, Idle_avg=841.41, Wait_avg=596.19, T=6.823s
+Fitness_train: 817.5556
+Formula: (max(PT - RO, (min(TQ * MW, min(MW, 1.0))) * MW)) + RO
+Tree: 
+└─ add
+   ├─ max
+   │  ├─ sub
+   │  │  ├─ PT
+   │  │  └─ RO
+   │  └─ mul
+   │     ├─ min
+   │     │  ├─ mul
+   │     │  │  ├─ TQ
+   │     │  │  └─ MW
+   │     │  └─ min
+   │     │     ├─ MW
+   │     │     └─ 1.0
+   │     └─ MW
+   └─ RO
+
+test_flex_break_0_util0.7_ec0.03.json: MS=501, Idle_avg=125.90, Wait_avg=237.86, T=0.003s
+test_flex_break_1_util0.7_ec0.08.json: MS=489, Idle_avg=119.40, Wait_avg=201.28, T=0.003s
+test_flex_break_2_util0.95_ec0.03.json: MS=384, Idle_avg=50.30, Wait_avg=207.22, T=0.004s
+test_flex_break_3_util0.95_ec0.08.json: MS=363, Idle_avg=42.40, Wait_avg=218.84, T=0.005s
 
 --- MEDIA ---
-Average_MS   : 1514.86
-Average_Idle : 676.49
-Average_Wait : 622.85
-Average_T    : 1.769s
+Average_MS   : 434.25
+Average_Idle : 84.50
+Average_Wait : 216.30
+Average_T    : 0.003s
 
 === Individual 3 ===
-Fitness_train: 1493.2857
-Expression: protected_div(max(PT, MW), max(RPT, sub(sub(sub(neg(sub(min(MW, PT), add(TQ, RPT))), PT), PT), add(sub(MW, max(add(RPT, RO), RPT)), WIP))))
-setb4cc_dynamic_1.txt: MS=1093, Idle_avg=249.25, Wait_avg=438.94, T=0.006s
-seti5xy_dynamic_1.txt: MS=1590, Idle_avg=774.71, Wait_avg=783.11, T=0.018s
-mt10c1_dynamic_1.txt: MS=1368, Idle_avg=635.55, Wait_avg=635.27, T=0.007s
-mt10xy_dynamic_1.txt: MS=1412, Idle_avg=599.83, Wait_avg=616.08, T=4.113s
-mt10cc_dynamic_1.txt: MS=1248, Idle_avg=585.75, Wait_avg=374.00, T=0.006s
-mt10xxx_dynamic_1.txt: MS=1201, Idle_avg=683.15, Wait_avg=651.33, T=0.008s
-setb4x_dynamic_1.txt: MS=1515, Idle_avg=594.82, Wait_avg=557.74, T=0.008s
-setb4xy_dynamic_1.txt: MS=1585, Idle_avg=888.08, Wait_avg=732.81, T=4.085s
-seti5xyz_dynamic_1.txt: MS=2062, Idle_avg=1096.83, Wait_avg=875.00, T=7.464s
-setb4xxx_dynamic_1.txt: MS=1776, Idle_avg=875.62, Wait_avg=756.19, T=0.012s
-seti5cc_dynamic_1.txt: MS=1714, Idle_avg=840.24, Wait_avg=663.35, T=0.015s
-seti5xxx_dynamic_1.txt: MS=1520, Idle_avg=751.24, Wait_avg=689.00, T=0.017s
-setb4xx_dynamic_1.txt: MS=1141, Idle_avg=444.25, Wait_avg=564.71, T=0.006s
-mt10x_dynamic_1.txt: MS=1270, Idle_avg=620.55, Wait_avg=524.92, T=0.007s
-setb4xyz_dynamic_1.txt: MS=1552, Idle_avg=814.08, Wait_avg=790.41, T=0.011s
-mt10xyz_dynamic_1.txt: MS=1265, Idle_avg=504.46, Wait_avg=425.80, T=4.665s
-mt10xx_dynamic_1.txt: MS=1383, Idle_avg=593.58, Wait_avg=482.40, T=0.007s
-setb4c9_dynamic_1.txt: MS=1600, Idle_avg=617.55, Wait_avg=659.18, T=0.008s
-seti5x_dynamic_1.txt: MS=2059, Idle_avg=825.00, Wait_avg=654.81, T=6.040s
-seti5c12_dynamic_1.txt: MS=1840, Idle_avg=961.19, Wait_avg=925.58, T=0.021s
-seti5xx_dynamic_1.txt: MS=1933, Idle_avg=782.59, Wait_avg=550.47, T=6.590s
+Fitness_train: 817.7778
+Formula: PT - RO + 1.0 - TQ / PT
+Tree: 
+└─ sub
+   ├─ add
+   │  ├─ sub
+   │  │  ├─ PT
+   │  │  └─ RO
+   │  └─ 1.0
+   └─ protected_div
+      ├─ TQ
+      └─ PT
+
+test_flex_break_0_util0.7_ec0.03.json: MS=504, Idle_avg=135.10, Wait_avg=235.59, T=0.003s
+test_flex_break_1_util0.7_ec0.08.json: MS=492, Idle_avg=121.40, Wait_avg=200.93, T=0.003s
+test_flex_break_2_util0.95_ec0.03.json: MS=391, Idle_avg=47.50, Wait_avg=191.28, T=0.003s
+test_flex_break_3_util0.95_ec0.08.json: MS=357, Idle_avg=39.00, Wait_avg=183.40, T=0.003s
 
 --- MEDIA ---
-Average_MS   : 1529.86
-Average_Idle : 701.82
-Average_Wait : 635.77
-Average_T    : 1.577s
+Average_MS   : 436.00
+Average_Idle : 85.75
+Average_Wait : 202.80
+Average_T    : 0.003s
 
 === Individual 4 ===
-Fitness_train: 1493.6667
-Expression: protected_div(mul(neg(max(MW, RPT)), mul(add(WIP, MW), min(WIP, TQ))), PT)
-setb4cc_dynamic_1.txt: MS=1146, Idle_avg=294.08, Wait_avg=458.50, T=0.006s
-seti5xy_dynamic_1.txt: MS=1628, Idle_avg=804.06, Wait_avg=826.89, T=0.018s
-mt10c1_dynamic_1.txt: MS=1382, Idle_avg=693.64, Wait_avg=636.91, T=0.008s
-mt10xy_dynamic_1.txt: MS=1053, Idle_avg=479.50, Wait_avg=495.00, T=0.005s
-mt10cc_dynamic_1.txt: MS=1248, Idle_avg=565.83, Wait_avg=373.50, T=4.279s
-mt10xxx_dynamic_1.txt: MS=1326, Idle_avg=806.77, Wait_avg=725.42, T=0.010s
-setb4x_dynamic_1.txt: MS=1378, Idle_avg=543.45, Wait_avg=525.68, T=0.007s
-setb4xy_dynamic_1.txt: MS=1532, Idle_avg=751.58, Wait_avg=624.00, T=4.149s
-seti5xyz_dynamic_1.txt: MS=1994, Idle_avg=1031.72, Wait_avg=802.06, T=7.105s
-setb4xxx_dynamic_1.txt: MS=1635, Idle_avg=679.92, Wait_avg=723.12, T=0.011s
-seti5cc_dynamic_1.txt: MS=1924, Idle_avg=971.00, Wait_avg=776.24, T=0.019s
-seti5xxx_dynamic_1.txt: MS=1444, Idle_avg=683.94, Wait_avg=618.00, T=0.015s
-setb4xx_dynamic_1.txt: MS=1551, Idle_avg=513.67, Wait_avg=588.88, T=4.133s
-mt10x_dynamic_1.txt: MS=1297, Idle_avg=589.55, Wait_avg=503.42, T=0.007s
-setb4xyz_dynamic_1.txt: MS=1544, Idle_avg=754.69, Wait_avg=711.53, T=0.010s
-mt10xyz_dynamic_1.txt: MS=1250, Idle_avg=498.62, Wait_avg=488.40, T=4.698s
-mt10xx_dynamic_1.txt: MS=1377, Idle_avg=566.17, Wait_avg=453.50, T=0.007s
-setb4c9_dynamic_1.txt: MS=1328, Idle_avg=466.73, Wait_avg=580.94, T=0.006s
-seti5x_dynamic_1.txt: MS=1920, Idle_avg=777.94, Wait_avg=604.12, T=6.127s
-seti5c12_dynamic_1.txt: MS=1804, Idle_avg=890.25, Wait_avg=901.00, T=0.019s
-seti5xx_dynamic_1.txt: MS=1933, Idle_avg=841.41, Wait_avg=596.19, T=6.392s
+Fitness_train: 817.8889
+Formula: (max(PT - RO, TQ * MW)) + PT - RO
+Tree: 
+└─ add
+   ├─ max
+   │  ├─ sub
+   │  │  ├─ PT
+   │  │  └─ RO
+   │  └─ mul
+   │     ├─ TQ
+   │     └─ MW
+   └─ sub
+      ├─ PT
+      └─ RO
+
+test_flex_break_0_util0.7_ec0.03.json: MS=495, Idle_avg=132.60, Wait_avg=235.85, T=0.003s
+test_flex_break_1_util0.7_ec0.08.json: MS=490, Idle_avg=124.90, Wait_avg=199.80, T=0.003s
+test_flex_break_2_util0.95_ec0.03.json: MS=391, Idle_avg=48.20, Wait_avg=193.03, T=0.003s
+test_flex_break_3_util0.95_ec0.08.json: MS=368, Idle_avg=43.80, Wait_avg=192.22, T=0.004s
 
 --- MEDIA ---
-Average_MS   : 1509.24
-Average_Idle : 676.41
-Average_Wait : 619.68
-Average_T    : 1.763s
+Average_MS   : 436.00
+Average_Idle : 87.38
+Average_Wait : 205.22
+Average_T    : 0.003s
 
 === Individual 5 ===
-Fitness_train: 1494.1190
-Expression: protected_div(max(PT, MW), max(RPT, sub(sub(neg(sub(min(add(PT, WIP), PT), add(TQ, RPT))), PT), add(sub(MW, max(add(RPT, RO), sub(WIP, TQ))), WIP))))
-setb4cc_dynamic_1.txt: MS=1093, Idle_avg=249.25, Wait_avg=438.94, T=0.006s
-seti5xy_dynamic_1.txt: MS=1590, Idle_avg=774.71, Wait_avg=783.11, T=0.017s
-mt10c1_dynamic_1.txt: MS=1368, Idle_avg=635.55, Wait_avg=635.27, T=0.008s
-mt10xy_dynamic_1.txt: MS=1412, Idle_avg=599.83, Wait_avg=616.08, T=4.078s
-mt10cc_dynamic_1.txt: MS=1248, Idle_avg=580.42, Wait_avg=368.18, T=0.006s
-mt10xxx_dynamic_1.txt: MS=1201, Idle_avg=683.15, Wait_avg=651.33, T=0.009s
-setb4x_dynamic_1.txt: MS=1484, Idle_avg=598.00, Wait_avg=563.32, T=0.008s
-setb4xy_dynamic_1.txt: MS=1585, Idle_avg=888.08, Wait_avg=732.81, T=4.065s
-seti5xyz_dynamic_1.txt: MS=2062, Idle_avg=1096.83, Wait_avg=875.00, T=7.331s
-setb4xxx_dynamic_1.txt: MS=1776, Idle_avg=875.62, Wait_avg=756.19, T=0.012s
-seti5cc_dynamic_1.txt: MS=1623, Idle_avg=785.12, Wait_avg=649.88, T=0.014s
-seti5xxx_dynamic_1.txt: MS=1520, Idle_avg=751.24, Wait_avg=689.00, T=0.017s
-setb4xx_dynamic_1.txt: MS=1141, Idle_avg=444.25, Wait_avg=564.71, T=0.006s
-mt10x_dynamic_1.txt: MS=1270, Idle_avg=602.36, Wait_avg=520.92, T=0.007s
-setb4xyz_dynamic_1.txt: MS=1552, Idle_avg=814.08, Wait_avg=790.41, T=0.011s
-mt10xyz_dynamic_1.txt: MS=1265, Idle_avg=504.46, Wait_avg=425.80, T=4.587s
-mt10xx_dynamic_1.txt: MS=1383, Idle_avg=593.58, Wait_avg=482.40, T=0.007s
-setb4c9_dynamic_1.txt: MS=1600, Idle_avg=617.55, Wait_avg=659.18, T=0.008s
-seti5x_dynamic_1.txt: MS=2059, Idle_avg=825.00, Wait_avg=654.81, T=5.985s
-seti5c12_dynamic_1.txt: MS=1840, Idle_avg=961.19, Wait_avg=925.58, T=0.021s
-seti5xx_dynamic_1.txt: MS=1933, Idle_avg=782.59, Wait_avg=550.47, T=6.546s
+Fitness_train: 818.7778
+Formula: (max(PT - RO, RO)) + RO
+Tree: 
+└─ add
+   ├─ max
+   │  ├─ sub
+   │  │  ├─ PT
+   │  │  └─ RO
+   │  └─ RO
+   └─ RO
+
+test_flex_break_0_util0.7_ec0.03.json: MS=501, Idle_avg=125.90, Wait_avg=237.86, T=0.003s
+test_flex_break_1_util0.7_ec0.08.json: MS=488, Idle_avg=122.10, Wait_avg=200.11, T=0.003s
+test_flex_break_2_util0.95_ec0.03.json: MS=396, Idle_avg=54.30, Wait_avg=204.30, T=0.003s
+test_flex_break_3_util0.95_ec0.08.json: MS=377, Idle_avg=43.70, Wait_avg=218.66, T=0.005s
 
 --- MEDIA ---
-Average_MS   : 1524.05
-Average_Idle : 698.23
-Average_Wait : 634.92
-Average_T    : 1.559s
+Average_MS   : 440.50
+Average_Idle : 86.50
+Average_Wait : 215.23
+Average_T    : 0.003s

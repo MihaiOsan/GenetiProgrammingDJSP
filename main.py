@@ -7,19 +7,22 @@ from pathlib import Path
 from collections import defaultdict
 from typing import List, Dict, Tuple
 
+from deap import gp
+
 from data_reader import load_instances_from_directory
 from evaluator    import evaluate_individual
 from gantt_plot   import plot_gantt
 from gp_setup     import create_toolbox
 from evaluator    import run_genetic_program  # dacă numele e diferit, ajustează
+from simple_tree import simplify_individual, tree_str, infix_str
 
 # ---------------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------------
-TRAIN_DIR = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/train/barnes")
-TEST_DIR  = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/test/barnes")
-POP_SIZE  = 40
-N_GENERATIONS = 15
+TRAIN_DIR = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/training_sets")
+TEST_DIR  = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/test_sets")
+POP_SIZE  = 60
+N_GENERATIONS = 5
 N_WORKERS = 5         # trece la create_toolbox(np=N_WORKERS)
 MAX_HOF   = 5         # câți păstrăm în Hall-of-Fame
 
@@ -121,14 +124,16 @@ def main() -> None:
     with open(RESULTS_FILE, "w", encoding="utf-8") as outf:
         for rank, ind in enumerate(best_5, 1):
             ind_fit = ind.fitness.values[0] if ind.fitness.valid else float("inf")
-            rule_str = str(ind)
-
+            simp_ind = simplify_individual(ind, toolbox.pset)
             outf.write(f"\n=== Individual {rank} ===\n")
             outf.write(f"Fitness_train: {ind_fit:.4f}\n")
-            outf.write(f"Expression: {rule_str}\n")
+            outf.write(f"Formula: {infix_str(simp_ind)}\n")
+            outf.write(f"Tree: \n{tree_str(simp_ind)}\n\n")
+
 
             print(f"\n=== Testing Individual {rank}/{MAX_HOF} (fitness={ind_fit:.4f}) ===")
-            print(f"Expr: {rule_str}")
+            print(f"Expr: {infix_str(simp_ind)}\n")
+            print(f"Expr: \n{tree_str(simp_ind)}\n\n")
 
             sum_ms = 0.0
             sum_idle = 0.0
@@ -171,7 +176,7 @@ def main() -> None:
 
                 # Gantt (opţional)
                 gantt_name = f"{Path(fname).stem}_ind{rank}.png"
-                plot_gantt(sched, nm, ev_cp["breakdowns"],
+                plot_gantt(ms, sched, nm, ev_cp["breakdowns"],
                            title=f"{fname} – ind{rank} (MS={ms})",
                            save_path=GANTT_DIR / gantt_name)
 
