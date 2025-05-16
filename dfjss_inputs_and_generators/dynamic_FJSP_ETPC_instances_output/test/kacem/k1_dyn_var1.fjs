@@ -1,0 +1,12 @@
+4 5
+3 5 0 2 1 5 2 4 3 1 4 2 5 0 5 1 4 2 5 3 7 4 5 5 0 4 1 5 2 5 3 4 4 5 
+3 5 0 2 1 5 2 4 3 7 4 8 5 0 5 1 6 2 9 3 8 4 5 5 0 4 1 5 2 4 3 54 4 5 
+4 5 0 9 1 8 2 6 3 7 4 9 5 0 6 1 1 2 2 3 5 4 4 5 0 2 1 5 2 4 3 2 4 4 5 0 4 1 5 2 2 3 1 4 5 
+2 5 0 1 1 5 2 2 3 4 4 12 5 0 5 1 1 2 2 3 1 4 2 
+
+# Dynamic Events
+# Machine Breakdowns (machine_id(0-indexed) start_time end_time):
+B 0 1 2
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+# op_details: num_machines_for_op m1_id(1-indexed) t1 m2_id(1-indexed) t2 ...
+A 6 4 2 5 5 11 1 1 2 3 3 36 4 2 5 5 4 4 4 3 24 2 2 1 5 

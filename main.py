@@ -19,12 +19,12 @@ from simple_tree import simplify_individual, tree_str, infix_str
 # ---------------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------------
-TRAIN_DIR = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/training_sets")
-TEST_DIR  = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/test_sets")
-POP_SIZE  = 60
-N_GENERATIONS = 5
+TRAIN_DIR = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/train/barnes")
+TEST_DIR  = Path("dfjss_inputs_and_generators/dynamic-FJSP-instances/test/barnes")
+POP_SIZE  = 5
+N_GENERATIONS = 2
 N_WORKERS = 5         # trece la create_toolbox(np=N_WORKERS)
-MAX_HOF   = 5         # câți păstrăm în Hall-of-Fame
+MAX_HOF   = 1         # câți păstrăm în Hall-of-Fame
 
 RESULTS_FILE = "rezultate/genetic.txt"
 GANTT_DIR    = Path("gantt_outputs/genetic")

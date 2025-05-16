@@ -1,0 +1,15 @@
+3 3
+3 1 0 17 2 0 40 1 130 2 1 50 2 60 
+3 1 0 30 2 0 150 1 160 1 2 70 
+3 2 0 50 1 60 2 1 170 2 180 2 1 90 2 100 
+
+# ETPC Constraints
+# fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse (all 0-indexed)
+1 2 3 0 24
+
+# Dynamic Events
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+# op_details: num_machines_for_op m1_id(1-indexed) t1 m2_id(1-indexed) t2 ...
+A 39040 3 3 2 1 121 2 100 1 2 156 2 1 164 2 75 
+# Cancelled Jobs (cancellation_time original_job_id_to_cancel(0-indexed)):
+C 15446 0

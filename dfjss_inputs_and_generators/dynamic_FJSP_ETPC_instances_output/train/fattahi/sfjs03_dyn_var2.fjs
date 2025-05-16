@@ -1,0 +1,11 @@
+3 2
+2 1 0 43 2 0 87 1 95 
+2 2 0 63 1 53 1 1 73 
+2 2 0 125 1 135 2 0 43 1 61 
+
+# Dynamic Events
+# Machine Breakdowns (machine_id(0-indexed) start_time end_time):
+B 1 89846 89859
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+# op_details: num_machines_for_op m1_id(1-indexed) t1 m2_id(1-indexed) t2 ...
+A 46932 3 2 2 2 79 1 71 1 2 84 

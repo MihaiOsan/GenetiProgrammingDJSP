@@ -1,0 +1,23 @@
+6 6
+6 1 2 1 1 0 3 2 1 6 2 6 2 3 7 0 7 2 5 3 1 3 2 4 6 3 6 
+6 3 1 8 5 8 0 8 3 2 5 1 5 4 5 3 4 10 2 10 1 10 2 5 10 4 10 2 0 10 1 10 2 3 4 5 4 
+6 3 2 5 1 5 3 5 2 3 4 4 4 1 5 8 1 0 9 3 1 1 4 1 2 1 3 4 7 3 7 5 7 
+6 1 1 5 3 0 5 1 5 3 5 1 2 5 2 3 3 5 3 1 4 8 1 5 9 
+6 3 2 9 1 9 3 9 2 1 3 5 3 3 4 5 3 5 1 5 1 5 4 3 0 3 3 3 1 3 1 3 1 
+6 3 1 3 3 3 2 3 2 3 3 4 3 1 5 9 3 0 10 3 10 1 10 3 4 4 3 4 2 4 2 2 1 4 1 
+
+# ETPC Constraints
+# fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse (all 0-indexed)
+7 5 1 0 2
+6 1 1 0 2
+3 0 3 5 2
+3 2 6 0 2
+
+# Dynamic Events
+# Machine Breakdowns (machine_id(0-indexed) start_time end_time):
+B 1 184087 184091
+B 4 93437 93447
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+# op_details: num_machines_for_op m1_id(1-indexed) t1 m2_id(1-indexed) t2 ...
+A 54290 6 6 2 5 3 6 4 2 3 4 4 3 2 2 1 1 9 2 2 7 6 5 2 6 6 5 4 1 1 4 
+A 35504 7 6 1 3 8 3 1 9 5 3 6 7 3 5 10 3 3 6 1 3 2 5 1 3 3 7 1 2 3 1 2 2 

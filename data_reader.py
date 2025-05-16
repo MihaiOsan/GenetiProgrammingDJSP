@@ -3,7 +3,7 @@ import json
 import math # Needed for rounding arrival/start times if they are floats
 import pprint
 
-# --- Function for reading the original .txt format (with added error handling) ---
+# ... (read_dynamic_fjsp_instance_txt rămâne la fel) ...
 def read_dynamic_fjsp_instance_txt(file_path):
     """
     Reads a FJSP instance file in the original .txt format with dynamic events.
@@ -42,6 +42,7 @@ def read_dynamic_fjsp_instance_txt(file_path):
             "breakdowns": {},  # Store as {machine_id: [(start1, end1), (start2, end2), ...]}
             "added_jobs": [],  # Store as [(arrival_time, job_ops_list), ...]
             "cancelled_jobs": [] # Store as [(cancel_time, initial_job_index), ...]
+             # Vom adauga chei noi aici mai tarziu, dar initializam dictionarul standard
         }
 
         parsing_jobs = True
@@ -218,15 +219,12 @@ def read_dynamic_fjsp_instance_txt(file_path):
         print(f"   An unexpected error occurred while parsing {file_path}: {e}")
         return None, None, None, None
 
-# --- Function for reading the JSON format ---
-# ... (codul funcției read_dynamic_fjsp_instance_json rămâne la fel) ...
+
 def read_dynamic_fjsp_instance_json(file_path):
     """
     Citește fișierul de instanță FJSP (.json) cu evenimente dinamice.
-    Numărul de mașini este dedus din indexul maxim al mașinii utilizate
-    în 'jobs'->'operations'->'candidate_machines' ȘI 'machine_properties'.
-    Joburile cu 'arrival_time' > 0 sunt tratate ca 'added_jobs'.
-    Breakdowns sunt citite din 'machine_properties'.
+    Include citirea 'weight', 'due_date' pentru joburi și a 'etpc_constraints'.
+    Aceste informații suplimentare sunt stocate în dicționarul 'dynamic_events'.
     Returnează tuple (num_initial_jobs, num_machines, initial_jobs, dynamic_events).
     Returnează (None, None, None, None) la eroare.
     """
@@ -245,314 +243,300 @@ def read_dynamic_fjsp_instance_json(file_path):
         return None, None, None, None
 
     try:
-        # --- Extragem joburile și machine_properties (dacă există) ---
-        all_job_definitions = data.get('jobs')
-        if not isinstance(all_job_definitions, list): # Poate fi goală, dar trebuie să fie listă
-             raise ValueError("Missing or invalid 'jobs' field (must be a list) in JSON.")
+        # --- Extragem datele principale ---
+        all_job_definitions = data.get('jobs', []) # Folosim [] ca default daca 'jobs' lipseste
+        if not isinstance(all_job_definitions, list):
+             raise ValueError("Invalid 'jobs' field (must be a list or missing) in JSON.")
 
-        machine_properties = data.get('machine_breakdowns', {}) # Folosim {} dacă lipsește
-        if not isinstance(machine_properties, dict):
-            print("   Warning: 'machine_properties' field is not a dictionary. Ignoring it for machine count and breakdowns.")
-            machine_properties = {}
+        # --- MODIFICARE: Citim 'machine_breakdowns' direct ---
+        machine_breakdowns_data = data.get('machine_breakdowns', {})
+        if not isinstance(machine_breakdowns_data, dict):
+            print("   Warning: 'machine_breakdowns' field found but is not a dictionary. Ignoring breakdowns.")
+            machine_breakdowns_data = {}
 
-        # --- Determinăm numărul de mașini găsind indexul maxim + 1 ---
+        # --- MODIFICARE: Citim 'etpc_constraints' ---
+        etpc_constraints = data.get('etpc_constraints', [])
+        if not isinstance(etpc_constraints, list):
+            print("   Warning: 'etpc_constraints' field found but is not a list. Ignoring.")
+            etpc_constraints = []
+        # Putem adauga validari suplimentare pentru continutul listei etpc_constraints daca e necesar
+
+        # --- Determinăm numărul de mașini ---
         max_machine_index = -1
-
         # Verificăm în joburi
-        if not all_job_definitions and not machine_properties:
-             # If both are empty/missing, we might still proceed if num_machines can be inferred elsewhere
-             # or default to 0/1, but it's safer to raise an error or warn. Let's warn and default to 1?
-             # Or better, raise error if *no* machine index is found *anywhere*.
-             pass # We'll check max_machine_index later
-
         for i, job_def in enumerate(all_job_definitions):
-            if not isinstance(job_def, dict): continue # Ignorăm joburile invalide
+            if not isinstance(job_def, dict): continue
             operations = job_def.get("operations", [])
-            if not isinstance(operations, list): continue # Ignorăm operațiile invalide
-
+            if not isinstance(operations, list): continue
             for op_idx, op in enumerate(operations):
                  if not isinstance(op, dict): continue
                  candidate_machines = op.get("candidate_machines", {})
                  if not isinstance(candidate_machines, dict): continue
-
                  for m_str in candidate_machines.keys():
                       try:
                           m_idx = int(m_str)
                           if m_idx < 0: raise ValueError("Machine index cannot be negative.")
                           max_machine_index = max(max_machine_index, m_idx)
                       except (ValueError, TypeError):
-                           # Provide more context in error
                            job_id_info = job_def.get('id', f"at index {i}")
                            raise ValueError(f"Invalid machine key '{m_str}' in job '{job_id_info}', operation index {op_idx}.")
 
-
-        # Verificăm în machine_properties
-        for m_str in machine_properties.keys():
+        # Verificăm în machine_breakdowns_data
+        for m_str in machine_breakdowns_data.keys():
             try:
                 m_idx = int(m_str)
-                if m_idx < 0: raise ValueError("Machine index in properties cannot be negative.")
+                if m_idx < 0: raise ValueError("Machine index in breakdowns cannot be negative.")
                 max_machine_index = max(max_machine_index, m_idx)
             except (ValueError, TypeError):
-                raise ValueError(f"Invalid machine key '{m_str}' in 'machine_properties'.")
+                raise ValueError(f"Invalid machine key '{m_str}' in 'machine_breakdowns'.")
 
         # Calculăm numărul de mașini
         if max_machine_index == -1:
-             # This means no machine indices were found anywhere.
-             # If jobs or properties existed but were empty or malformed, this can happen.
-             # If both jobs and properties were missing/empty initially, this is expected.
-             # Let's default to 1 machine ONLY if there are jobs defined (even if they had no machines listed?)
-             # It's safer to raise an error if no machines could be inferred at all.
-             if all_job_definitions or machine_properties:
-                  raise ValueError("Could not find any valid machine indices in jobs or properties to determine machine count.")
-             else:
-                  # No jobs, no properties - maybe a valid (empty) instance? Let's allow 0 machines.
-                  print("   Warning: No jobs or machine properties found. Setting number of machines to 0.")
+             if all_job_definitions or machine_breakdowns_data: # Daca exista joburi sau breakdowns definite
+                  # Ar trebui sa existe cel putin o masina daca exista operatii/breakdowns
+                  # Poate ridicam eroare sau avertizam si setam la 1?
+                  # Sa ridicam eroare pentru a fi siguri.
+                  raise ValueError("Could not find any valid machine indices to determine machine count, although jobs or breakdowns exist.")
+             else: # Nici joburi, nici breakdowns
+                  print("   Warning: No jobs or machine breakdowns found. Setting number of machines to 0.")
                   num_machines = 0
         else:
             num_machines = max_machine_index + 1
+        print(f"      Derived number of machines: {num_machines}")
 
-        # Print derived number of machines only if > 0
-        if num_machines > 0:
-            print(f"      Derived number of machines (based on max index {max_machine_index}): {num_machines}")
-        elif num_machines == 0 and (all_job_definitions or machine_properties):
-             # This state should not be reached due to the error raised above
-             pass
-
-
-        # --- Continuăm parsarea ca înainte, folosind num_machines derivat ---
-        initial_jobs = []
-        dynamic_events = { "breakdowns": {}, "added_jobs": [], "cancelled_jobs": [] }
+        # --- Inițializăm structurile de date returnate ---
+        initial_jobs = [] # Va contine doar lista de operatii: List[List[List[Tuple[int, int]]]]
+        job_properties = [] # MODIFICARE: Lista pentru proprietatile joburilor initiale
+        dynamic_events = {
+            "breakdowns": {},
+            "added_jobs": [],
+            "cancelled_jobs": [],
+            # --- MODIFICARE: Adăugăm cheile noi aici ---
+            "etpc_constraints": etpc_constraints, # Stocăm lista citită
+            "job_properties": job_properties # Vom popula această listă mai jos
+        }
         initial_job_index = 0
-        initial_job_id_map = {} # Map original job 'id' to initial_job_index
+        initial_job_id_map = {}
 
+        # --- Procesăm definițiile de joburi ---
         for i, job_def in enumerate(all_job_definitions):
-             job_id_info = job_def.get('id', f"at index {i}") # For better error messages
-            # --- Re-verificăm tipul job_def aici pentru claritate ---
+             job_id_info = job_def.get('id', f"at index {i}")
              if not isinstance(job_def, dict):
-                 print(f"   Warning: Skipping invalid job definition at index {i} (not a dictionary) during detailed parsing.")
+                 print(f"   Warning: Skipping invalid job definition at index {i} (not a dictionary).")
                  continue
 
+             # Extragem timpul de sosire
              arrival_time_raw = job_def.get("arrival_time", 0)
              try:
-                 # Allow float arrival times but ceil them for discrete events
-                 if isinstance(arrival_time_raw, (int, float)):
-                      arrival_time = math.ceil(arrival_time_raw)
-                 else:
-                      # Try converting to float first, then ceil
-                      arrival_time = math.ceil(float(arrival_time_raw))
-
-                 if arrival_time < 0:
-                     print(f"   Warning: Negative arrival_time {arrival_time_raw} for job '{job_id_info}'. Using 0.")
-                     arrival_time = 0
+                 arrival_time = math.ceil(arrival_time_raw) if isinstance(arrival_time_raw, (int, float)) else math.ceil(float(arrival_time_raw))
+                 if arrival_time < 0: arrival_time = 0
              except (TypeError, ValueError):
                   print(f"   Warning: Invalid arrival_time '{arrival_time_raw}' for job '{job_id_info}'. Using 0.")
                   arrival_time = 0
 
+             # Extragem operațiile
              operations = job_def.get("operations")
              if not isinstance(operations, list) or not operations:
-                  print(f"   Warning: Skipping job '{job_id_info}' due to missing or empty 'operations' list during detailed parsing.")
+                  print(f"   Warning: Skipping job '{job_id_info}' due to missing or empty 'operations'.")
                   continue
 
+             # Parsăm operațiile în formatul intern (listă de liste de tuple)
              current_job_ops = []
+             valid_ops = True
              for op_idx, op in enumerate(operations):
+                 # ... (validările și parsarea operațiilor rămân la fel ca înainte) ...
                  if not isinstance(op, dict):
-                     raise ValueError(f"Invalid operation format (not a dict) for job '{job_id_info}', op index {op_idx} during detailed parsing.")
-
+                    valid_ops = False; raise ValueError(f"Invalid op format (job '{job_id_info}', op {op_idx}).")
                  candidate_machines = op.get("candidate_machines")
                  if not isinstance(candidate_machines, dict) or not candidate_machines:
-                      raise ValueError(f"Missing or empty 'candidate_machines' dict for job '{job_id_info}', op index {op_idx} during detailed parsing.")
+                    valid_ops = False; raise ValueError(f"Missing/empty candidates (job '{job_id_info}', op {op_idx}).")
 
                  alt_list = []
                  for m_str, p_time_raw in candidate_machines.items():
                     try:
                         m = int(m_str)
-                        # Allow float processing times? Let's assume integer for now based on TXT format.
-                        p = int(p_time_raw)
-
-                        # Validate machine index against derived num_machines
-                        # Allow num_machines == 0 only if no machines were ever defined
+                        p = int(p_time_raw) # Asumam int
                         if num_machines > 0 and not (0 <= m < num_machines):
-                            raise ValueError(f"Machine index {m} out of bounds (0-{num_machines-1}) for job '{job_id_info}', op {op_idx}.")
-                        elif num_machines == 0 and m != 0: # Or maybe just raise if num_machines is 0?
-                             # If num_machines is 0, no machine index should exist.
-                             raise ValueError(f"Machine index {m} found, but determined number of machines is 0. Inconsistent data in job '{job_id_info}', op {op_idx}.")
-
-                        if p < 0:
-                            raise ValueError(f"Processing time cannot be negative ({p}) for job '{job_id_info}', op {op_idx}.")
+                             raise ValueError(f"Machine index {m} out of bounds (0-{num_machines-1}).")
+                        elif num_machines == 0: raise ValueError("Machine index found, but num_machines is 0.")
+                        if p < 0: raise ValueError(f"Processing time cannot be negative ({p}).")
                         alt_list.append((m, p))
                     except (ValueError, TypeError) as e:
-                         # Improve error message
-                         raise ValueError(f"Invalid machine/time ('{m_str}': '{p_time_raw}') in job '{job_id_info}', op {op_idx}: {e}")
-
-
+                         valid_ops = False; raise ValueError(f"Invalid machine/time ('{m_str}':'{p_time_raw}') in job '{job_id_info}', op {op_idx}: {e}")
                  if not alt_list:
-                      raise ValueError(f"Operation must have at least one valid alternative machine (job '{job_id_info}', op index {op_idx}).")
-
-                 # Sort alternatives by machine index for consistency (optional but good)
+                     valid_ops = False; raise ValueError(f"Op must have alternatives (job '{job_id_info}', op {op_idx}).")
                  alt_list.sort(key=lambda x: x[0])
                  current_job_ops.append(alt_list)
 
-             # --- Clasifică jobul ---
+             if not valid_ops:
+                 # Daca au fost erori la parsarea operatiilor, sarim jobul
+                 # (desi exceptiile probabil au oprit deja executia)
+                 print(f"   Error during operation parsing for job '{job_id_info}'. Skipping.")
+                 continue
+
+
+             # --- Clasificăm jobul și extragem proprietățile ---
              if arrival_time > 0:
+                 # Job adăugat dinamic - stocăm doar operațiile
                  dynamic_events['added_jobs'].append((arrival_time, current_job_ops))
+                 # Nota: 'weight' și 'due_date' pentru joburile adăugate dinamic nu sunt
+                 # stocate în această implementare pentru a păstra structura simplă
+                 # a 'added_jobs' ca List[Tuple[int, List[...]]].
+                 # Ar necesita o modificare a structurii interne a 'added_jobs' sau
+                 # un mecanism separat de stocare.
              else:
+                 # Job inițial - stocăm operațiile în `initial_jobs`
                  initial_jobs.append(current_job_ops)
-                 original_id = job_def.get('id') # Get the original ID specified in the JSON
-                 if original_id is not None:
-                      # Check for duplicate original IDs among initial jobs
-                      if original_id in initial_job_id_map:
-                           print(f"   Warning: Duplicate original job ID '{original_id}' found. Cancellation might be ambiguous if based on ID.")
-                      initial_job_id_map[original_id] = initial_job_index
-                 initial_job_index += 1
+             original_id = job_def.get('id') # ID-ul original din JSON
 
-        # --- Procesează penele (folosind machine_properties pre-validat) ---
-        for m_str, props in machine_properties.items():
-            # Key conversion already validated during num_machines calculation
-            machine_id = int(m_str)
-            machine_breakdowns = []
-            for bd_idx, bd in enumerate(props):
+                 # --- MODIFICARE: Extragem weight și due_date ---
+             weight = job_def.get('weight', 1) # Default weight = 1
+             due_date = job_def.get('due_date', float('inf')) # Default due_date = infinit
+             try: # Validam/convertim tipurile
+                weight = float(weight) if isinstance(weight, (int, float, str)) else 1.0
+                due_date = float(due_date) if isinstance(due_date, (int, float, str)) else float('inf')
+             except (ValueError, TypeError):
+                print(f"   Warning: Invalid weight ('{job_def.get('weight')}') or due_date ('{job_def.get('due_date')}') for job '{job_id_info}'. Using defaults.")
+                weight = 1.0
+                due_date = float('inf')
 
-                if not isinstance(bd, dict):
-                    print(f"   Warning: Skipping invalid breakdown entry (not a dict) for machine {machine_id} at index {bd_idx}.")
-                    continue
-                start_raw = bd.get("start_time")
-                # Allow 'duration' or 'repair_time'
-                duration_raw = bd.get("duration", bd.get("repair_time"))
+            # Stocăm proprietățile jobului inițial
+             job_props = {
+                     'id': original_id, # ID-ul original (poate fi None)
+                     'index': initial_job_index, # Indexul intern (0, 1, ...)
+                     'weight': weight,
+                     'due_date': due_date
+            }
+             job_properties.append(job_props) # Adaugam la lista
 
-                try:
-                    # Use math.ceil for start time as well? Consistent with arrival.
-                    start = math.ceil(start_raw) if isinstance(start_raw, (int, float)) else -1
-                    duration = math.ceil(duration_raw) if isinstance(duration_raw, (int, float)) else -1
+                 # Mapăm ID-ul original la indexul intern (dacă ID-ul există)
+             if original_id is not None:
+                if original_id in initial_job_id_map:
+                    print(f"   Warning: Duplicate original job ID '{original_id}' found.")
+                initial_job_id_map[original_id] = initial_job_index
 
-                    if start < 0 or duration < 0:
-                         raise ValueError(f"Start time ({start_raw}) and duration ({duration_raw}) must be non-negative.")
+             initial_job_index += 1 # Incrementăm indexul pentru următorul job inițial
 
-                    end = start + duration # End time is exclusive? Or inclusive? Assume exclusive (interval [start, end))
-                                                # Let's stick to the TXT format's apparent convention: end time is the timestamp *when it becomes available again*.
-                                                # So, if breakdown is [5, 10] in TXT, it means unavailable at t=5, 6, 7, 8, 9. Available at t=10. Duration = 5.
-                                                # JSON: start_time=5, duration/repair_time=5 -> end = 10. Consistent.
-                    machine_breakdowns.append((start, end))
+        # --- Procesăm breakdowns (folosind noua logică) ---
+        for m_str, bd_list in machine_breakdowns_data.items():
+             try:
+                 machine_id = int(m_str)
+                 if num_machines > 0 and not (0 <= machine_id < num_machines):
+                      print(f"   Warning: Machine index {machine_id} from 'machine_breakdowns' out of bounds. Skipping.")
+                      continue
+                 elif num_machines == 0: continue # Skip if no machines
 
-                except (TypeError, ValueError) as e:
-                         print(f"   Warning: Skipping invalid breakdown data {bd} for machine {machine_id}: {e}")
+                 if not isinstance(bd_list, list):
+                     print(f"   Warning: Breakdowns for machine {machine_id} is not a list. Skipping.")
+                     continue
 
-            if machine_breakdowns:
-                     # Sort machine specific breakdowns by start time
-                machine_breakdowns.sort(key=lambda x: x[0])
-                dynamic_events['breakdowns'][machine_id] = machine_breakdowns
+                 machine_breakdowns = []
+                 for bd_idx, bd in enumerate(bd_list):
+                      # ... (logica de parsare a fiecărui breakdown 'bd' rămâne aceeași) ...
+                      if not isinstance(bd, dict): continue
+                      start_raw = bd.get("start_time")
+                      duration_raw = bd.get("duration", bd.get("repair_time"))
+                      try:
+                           start = math.ceil(start_raw) if isinstance(start_raw, (int, float)) else -1
+                           duration = math.ceil(duration_raw) if isinstance(duration_raw, (int, float)) else -1
+                           if start < 0 or duration < 0: raise ValueError("Times must be non-negative.")
+                           end = start + duration
+                           machine_breakdowns.append((start, end))
+                      except (TypeError, ValueError) as e:
+                           print(f"   Warning: Skipping invalid breakdown data {bd} for machine {machine_id}: {e}")
 
-        # --- Procesează alte evenimente dinamice definite în JSON ---
+                 if machine_breakdowns:
+                      machine_breakdowns.sort(key=lambda x: x[0])
+                      dynamic_events['breakdowns'][machine_id] = machine_breakdowns
+             except (ValueError, TypeError) as e:
+                  print(f"   Warning: Invalid machine key '{m_str}' in 'machine_breakdowns': {e}")
+
+
+        # --- Procesăm alte evenimente dinamice ('added_jobs', 'cancelled_jobs' din cheia 'dynamic_events') ---
+        # Logica existentă aici rămâne în mare parte neschimbată,
+        # deoarece citește din data.get('dynamic_events', {}).
+        # Joburile adăugate aici *nu* vor avea 'weight'/'due_date' stocate (vezi nota de mai sus).
         json_dynamic_events = data.get('dynamic_events', {})
         if isinstance(json_dynamic_events, dict):
-
-            # --- Joburi Anulate (dinamic) ---
+            # ... (Parsarea cancelled_jobs din json_dynamic_events ramane la fel) ...
             cancelled_jobs_json = json_dynamic_events.get('cancelled_jobs', [])
             if isinstance(cancelled_jobs_json, list):
                 for idx, cj in enumerate(cancelled_jobs_json):
                      try:
-                         if not isinstance(cj, dict): raise ValueError("Entry is not a dictionary.")
-
+                         # ... (validari si extragere cancel_time, job_id_to_cancel_orig) ...
+                         if not isinstance(cj, dict): raise ValueError("Entry not dict")
                          cancel_time_raw = cj['time']
-                         # Use ceil for consistency
                          cancel_time = math.ceil(cancel_time_raw) if isinstance(cancel_time_raw, (int,float)) else -1
-                         if cancel_time < 0: raise ValueError("Cancel time must be non-negative.")
+                         if cancel_time < 0: raise ValueError("Cancel time negative")
+                         job_id_to_cancel_orig = cj.get('job_id', cj.get('job_id_to_cancel'))
+                         if job_id_to_cancel_orig is None: raise KeyError("Missing job id")
 
-                         # Use 'job_id' for consistency with job definition field name
-                         job_id_to_cancel_orig = cj.get('job_id', cj.get('job_id_to_cancel')) # Allow both keys
-                         if job_id_to_cancel_orig is None: raise KeyError("Missing 'job_id' or 'job_id_to_cancel' field.")
-
-
-                         # Try to find the job index based on the original ID from the JSON
                          if job_id_to_cancel_orig in initial_job_id_map:
                              initial_job_idx = initial_job_id_map[job_id_to_cancel_orig]
                          else:
-                             # If ID not found, check if it's a valid integer index
                              try:
                                  potential_idx = int(job_id_to_cancel_orig)
-                                 if 0 <= potential_idx < len(initial_jobs):
-                                     initial_job_idx = potential_idx
-                                     # Optional: Warn if cancelling by index when IDs were present?
-                                     # print(f"   Warning: Cancelling job by index {initial_job_idx} as ID '{job_id_to_cancel_orig}' was not found in initial job IDs.")
-                                 else:
-                                     raise ValueError(f"ID '{job_id_to_cancel_orig}' not found in initial jobs, and it's not a valid index (0-{len(initial_jobs)-1}).")
-                             except (ValueError, TypeError): # Handle cases where ID is not int-convertible
-                                  raise ValueError(f"Cannot find initial job with ID '{job_id_to_cancel_orig}' to cancel.")
-
+                                 if 0 <= potential_idx < len(initial_jobs): initial_job_idx = potential_idx
+                                 else: raise ValueError(f"ID '{job_id_to_cancel_orig}' not found/invalid index.")
+                             except: raise ValueError(f"Cannot find initial job ID '{job_id_to_cancel_orig}'.")
 
                          dynamic_events['cancelled_jobs'].append((cancel_time, initial_job_idx))
-
                      except (KeyError, ValueError, TypeError) as e:
                           print(f"   Warning: Skipping invalid cancelled job entry {cj} at index {idx}: {e}")
 
-            # --- Joburi Adăugate (dinamic) ---
-            # This section handles jobs defined *within* the dynamic_events block,
-            # separate from jobs defined in the main 'jobs' list with arrival_time > 0.
+            # ... (Parsarea added_jobs din json_dynamic_events ramane la fel) ...
             added_jobs_json = json_dynamic_events.get('added_jobs', [])
             if isinstance(added_jobs_json, list):
                  for idx, aj in enumerate(added_jobs_json):
                       try:
-                           if not isinstance(aj, dict): raise ValueError("Entry is not a dictionary.")
-
+                          # ... (validari, extragere arrival_time, parsare operatii in added_job_ops) ...
+                           if not isinstance(aj, dict): raise ValueError("Entry not dict.")
                            arrival_time_raw = aj.get('arrival_time')
                            if arrival_time_raw is None: raise KeyError("Missing 'arrival_time'.")
                            arrival_time = math.ceil(arrival_time_raw) if isinstance(arrival_time_raw, (int, float)) else -1
-                           if arrival_time <= 0: raise ValueError("Dynamically added job arrival time must be positive.") # Should be > 0
-
+                           if arrival_time <= 0: raise ValueError("Dyn added job arrival time must be > 0.")
                            operations = aj.get("operations")
-                           if not isinstance(operations, list) or not operations:
-                                raise ValueError("Missing or empty 'operations' list.")
+                           if not isinstance(operations, list) or not operations: raise ValueError("Missing/empty ops.")
 
                            added_job_ops = []
-                           job_id_info = aj.get('id', f"dynamic event index {idx}") # For errors
+                           # ... (loop pt parsare operatii similar cu cel principal) ...
                            for op_idx, op in enumerate(operations):
-                                if not isinstance(op, dict): raise ValueError(f"Invalid operation format (op index {op_idx}).")
+                                if not isinstance(op, dict): raise ValueError(f"Invalid op format (dyn job idx {idx}, op {op_idx}).")
                                 candidate_machines = op.get("candidate_machines")
-                                if not isinstance(candidate_machines, dict) or not candidate_machines:
-                                     raise ValueError(f"Missing/empty 'candidate_machines' (op index {op_idx}).")
-
+                                if not isinstance(candidate_machines, dict) or not candidate_machines: raise ValueError("Missing candidates.")
                                 alt_list = []
                                 for m_str, p_time_raw in candidate_machines.items():
                                      try:
                                          m = int(m_str)
                                          p = int(p_time_raw)
-                                         if num_machines > 0 and not (0 <= m < num_machines):
-                                             raise ValueError(f"Machine index {m} out of bounds (0-{num_machines-1}).")
-                                         elif num_machines == 0:
-                                             raise ValueError("Machine index found, but num_machines is 0.")
-                                         if p < 0: raise ValueError(f"Processing time cannot be negative ({p}).")
+                                         if num_machines > 0 and not (0 <= m < num_machines): raise ValueError(f"Machine index {m} out of bounds.")
+                                         elif num_machines == 0: raise ValueError("Machine index found, but num_machines is 0.")
+                                         if p < 0: raise ValueError(f"Proc time negative ({p}).")
                                          alt_list.append((m, p))
-                                     except (ValueError, TypeError) as e:
-                                          raise ValueError(f"Invalid machine/time ('{m_str}':'{p_time_raw}'): {e}")
-
-                                if not alt_list: raise ValueError(f"Operation must have alternatives (op index {op_idx}).")
+                                     except (ValueError, TypeError) as e: raise ValueError(f"Invalid machine/time: {e}")
+                                if not alt_list: raise ValueError("Op must have alternatives.")
                                 alt_list.sort(key=lambda x: x[0])
                                 added_job_ops.append(alt_list)
-
-                           # Successfully parsed dynamic added job
+                           # Adaugam la lista principala de added_jobs
                            dynamic_events['added_jobs'].append((arrival_time, added_job_ops))
-
                       except (KeyError, ValueError, TypeError) as e:
                            print(f"   Warning: Skipping invalid dynamic added job entry {aj} at index {idx}: {e}")
 
-        # Sortează evenimentele adăugate (include cele din job list și cele din dynamic events)
+
+        # --- Finalizăm și sortăm ---
         dynamic_events['added_jobs'].sort(key=lambda x: x[0])
-        # Sortează evenimentele anulate
         dynamic_events['cancelled_jobs'].sort(key=lambda x: x[0])
+        # Nota: job_properties este deja sortat implicit după indexul joburilor inițiale
 
-
-        num_initial_jobs = len(initial_jobs)
-        # Re-validate num_machines consistency
-        if num_machines < 0: # Should not happen if logic above is correct
-            raise ValueError("Internal Error: Final derived number of machines is negative.")
-        # Allow num_machines == 0 only if the instance was truly empty
+        num_initial_jobs = len(initial_jobs) # Numărul efectiv de joburi inițiale parsate
+        if num_machines < 0: raise ValueError("Internal Error: Num machines negative.")
         if num_machines == 0 and (initial_jobs or dynamic_events['added_jobs'] or dynamic_events['breakdowns']):
-             raise ValueError("Internal Error: Number of machines derived as 0, but jobs or breakdowns requiring machines exist.")
+            raise ValueError("Internal Error: Num machines is 0, but jobs/breakdowns exist.")
 
-
+        # Returnăm structura originală (4 elemente), dar dynamic_events conține acum datele extra
         return num_initial_jobs, num_machines, initial_jobs, dynamic_events
 
     except (ValueError, IndexError, KeyError, TypeError) as e:
-        # Improve error context if possible
         print(f"   Error processing JSON data structure in {file_path}: {e}")
         return None, None, None, None
     except Exception as e:
@@ -566,6 +550,7 @@ def load_instances_from_directory(input_dir):
     Walks through `input_dir` and loads all .txt and .json FJSP instances.
     Prints the parsed data for each file.
     Returns a list of tuples: (initial_jobs, num_machines, dynamic_events, filename).
+    `dynamic_events` now contains additional keys if loaded from JSON.
     Skips files that cause parsing errors.
     """
     print(f"Reading dynamic FJSP instances from directory: {input_dir}")
@@ -575,81 +560,70 @@ def load_instances_from_directory(input_dir):
         return []
 
     for root, dirs, files in os.walk(input_dir):
-        # Sort files for consistent processing order (optional)
         files.sort()
         for fname in files:
             fpath = os.path.join(root, fname)
-            instance_data = None # Initialize for each file
-            parsed_tuple = None # Store the direct output of parser
+            instance_data = None
+            parsed_tuple = None
 
-            print(f"\n--- Processing file: {fname} ---") # Separator
+            print(f"\n--- Processing file: {fname} ---")
 
             if fname.endswith(".txt"):
                 try:
-                    # Call the parser
                     parsed_tuple = read_dynamic_fjsp_instance_txt(fpath)
-                    # Check if parsing was successful before unpacking and printing
-                    if parsed_tuple[0] is not None: # Check num_jobs
+                    if parsed_tuple[0] is not None:
                         num_jobs, num_machines, jobs, events = parsed_tuple
                         print(f"--- Parsed data from {fname} (.txt): ---")
-                        pprint.pprint(parsed_tuple) # Pretty print the whole tuple
+                        pprint.pprint(parsed_tuple)
                         print("----------------------------------------")
-                        # Prepare data for the final list (if needed later)
+                        # Adăugăm chei goale/default la 'events' pentru consistență în validare? Opțional.
+                        events.setdefault('etpc_constraints', [])
+                        events.setdefault('job_properties', [])
                         instance_data = (jobs, num_machines, events, fname)
                     else:
-                        print(f"   Skipping file {fname} due to parsing errors reported by function.")
-                except Exception as e: # Catch any unexpected error during the call itself
-                     print(f"   Critical error processing {fname}: {e}. Skipping file.")
+                        print(f"   Skipping file {fname} due to parsing errors.")
+                except Exception as e:
+                     print(f"   Critical error processing {fname}: {e}. Skipping.")
 
             elif fname.endswith(".json"):
                 try:
-                    # Call the parser
                     parsed_tuple = read_dynamic_fjsp_instance_json(fpath)
-                     # Check if parsing was successful before unpacking and printing
-                    if parsed_tuple[0] is not None: # Check num_jobs
+                    if parsed_tuple[0] is not None:
                         num_jobs, num_machines, jobs, events = parsed_tuple
                         print(f"--- Parsed data from {fname} (.json): ---")
-                        pprint.pprint(parsed_tuple) # Pretty print the whole tuple
+                        # Afișăm doar o parte din dynamic_events pentru claritate? Sau tot? Afișăm tot.
+                        pprint.pprint(parsed_tuple)
                         print("-----------------------------------------")
-                        # Prepare data for the final list (if needed later)
+                        # events conține deja cheile noi din parsarea JSON
                         instance_data = (jobs, num_machines, events, fname)
                     else:
-                        print(f"   Skipping file {fname} due to parsing errors reported by function.")
-                except Exception as e: # Catch any unexpected error during the call itself
-                     print(f"   Critical error processing {fname}: {e}. Skipping file.")
+                        print(f"   Skipping file {fname} due to parsing errors.")
+                except Exception as e:
+                     print(f"   Critical error processing {fname}: {e}. Skipping.")
 
-            # Append data if successfully parsed and structure looks valid
+            # Append data if successfully parsed
             if instance_data:
-                 # Perform a basic validation of the returned structure (optional but recommended)
+                 # --- MODIFICARE: Actualizăm validarea pentru a include cheile noi ---
                  if isinstance(instance_data[0], list) and \
                     isinstance(instance_data[1], int) and instance_data[1] >= 0 and \
                     isinstance(instance_data[2], dict) and \
                     'breakdowns' in instance_data[2] and \
                     'added_jobs' in instance_data[2] and \
-                    'cancelled_jobs' in instance_data[2]:
+                    'cancelled_jobs' in instance_data[2] and \
+                    'etpc_constraints' in instance_data[2] and \
+                    'job_properties' in instance_data[2]: # Verificam si cheile noi
                      all_instances.append(instance_data)
-                     print(f"   Successfully validated and stored instance: {fname} ({len(instance_data[0])} initial jobs, {instance_data[1]} machines)")
+                     # Afișăm confirmarea cu informații despre datele extra
+                     extra_info = ""
+                     if instance_data[2]['etpc_constraints']:
+                         extra_info += f", {len(instance_data[2]['etpc_constraints'])} ETPC constraints"
+                     if instance_data[2]['job_properties']:
+                         extra_info += f", {len(instance_data[2]['job_properties'])} initial job properties"
+
                  else:
-                      print(f"   Skipping file {fname} due to inconsistent data structure returned by parser or validation failure.")
-            print(f"--- Finished processing file: {fname} ---\n") # Separator
+                      print(f"   Skipping file {fname} due to inconsistent data structure returned by parser or validation failure (check for new keys in events dict).")
 
 
     print(f"Done reading dynamic FJSP instances. Stored {len(all_instances)} valid instances.")
     return all_instances
 
-# --- Example Usage ---
-if __name__ == "__main__":
-    # Create a dummy directory and files for testing
-    test_dir = "test_instances"
-    if not os.path.exists(test_dir):
-        os.makedirs(test_dir)
-
-
-
-
-    # 3. Run the loading function
-    loaded_data = load_instances_from_directory(test_dir)
-
-    # Optional: Clean up the test directory and files
-    # import shutil
-    # shutil.rmtree(test_dir)

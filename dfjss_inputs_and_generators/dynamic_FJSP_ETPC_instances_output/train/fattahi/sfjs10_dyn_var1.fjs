@@ -1,0 +1,15 @@
+4 5
+3 1 0 147 2 3 140 1 130 2 3 150 4 160 
+3 2 0 214 2 150 2 2 87 1 66 1 4 178 
+3 2 0 87 1 62 1 2 180 2 3 190 4 100 
+3 2 0 87 1 65 1 4 173 2 3 145 2 136 
+
+# ETPC Constraints
+# fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse (all 0-indexed)
+0 1 0 2 18
+
+# Dynamic Events
+# Machine Breakdowns (machine_id(0-indexed) start_time end_time):
+B 2 27483 27623
+# Cancelled Jobs (cancellation_time original_job_id_to_cancel(0-indexed)):
+C 23585 2

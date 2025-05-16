@@ -166,8 +166,18 @@ def calc_job_waiting_time(sched: List) -> Tuple[float, float]:
 # 3) Regulile de prioritizare / tie‑break
 ###############################################################################
 
-def remaining_processing_time(jobs, j: int, cur_op: int) -> int:
-    return sum(min(p for _m, p in op) for op in jobs[j][cur_op:])
+def remaining_processing_time(jobs_list_arg: List[List[List[Tuple[int, int]]]],
+                              job_idx_arg: int,
+                              current_op_idx_arg: int) -> float:
+    total_remaining_time = 0.0
+    if 0 <= job_idx_arg < len(jobs_list_arg):
+        job_ops_list = jobs_list_arg[job_idx_arg]
+        if 0 <= current_op_idx_arg < len(job_ops_list):
+            for op_list_idx in range(current_op_idx_arg, len(job_ops_list)):
+                operation_alternatives = job_ops_list[op_list_idx]
+                if operation_alternatives:
+                    total_remaining_time += min(float(p_time) for _m, p_time in operation_alternatives)
+    return total_remaining_time
 
 
 def compute_priority(rule: str,
@@ -180,15 +190,12 @@ def compute_priority(rule: str,
                      jobs,
                      job_progress,
                      arrival_times,
-                     due_dates,
                      machine_loads: Dict[int, int]) -> float:
     """Întoarce prioritatea numerică (mai mic = mai prioritar)."""
     if rule == "SPT":
         return ptime
     if rule == "LPT":
         return -ptime
-    if rule == "EDD":
-        return due_dates[job_id] - cur_time
     if rule == "FIFO":
         return arrival_times[job_id]
     if rule == "LIFO":
@@ -210,91 +217,221 @@ def compute_priority(rule: str,
 # 4) Simulare incrementală (time += 1) – fără paralelism pe același job
 ###############################################################################
 
-def schedule_dynamic_no_parallel(jobs: List,
-                                 n_machines: int,
-                                 events: Dict,
-                                 rule: str):
-    bds_per_machine = {m: sorted(events["breakdowns"].get(m, []), key=lambda x: x[0]) for m in range(n_machines)}
-    job_progress = [0]*len(jobs)
-    job_current_machine = [None]*len(jobs)
-    due_dates = [100*(j+1) for j in range(len(jobs))]
-    active_ops: Dict[int, Tuple] = {m: None for m in range(n_machines)}  # (job, opidx, start, remaining)
-    job_earliest_start = [0]*len(jobs)
-    arrival_times = [0]*len(jobs)
-    schedule: List[Tuple[int,int,int,int,int]] = []
-    t = 0
 
-    def in_breakdown(machine: int, time: int) -> bool:
-        return any(s <= time < e for s, e in bds_per_machine[machine])
 
-    while any(job_progress[j] < len(jobs[j]) for j in range(len(jobs))):
-        # Added jobs
-        for t_add, new_job in events["added_jobs"]:
-            if t_add == t:
-                j_id = len(jobs)
-                jobs.append(new_job)
+
+def schedule_dynamic_no_parallel(
+        initial_jobs_ops: List[List[List[Tuple[int, int]]]],
+        n_machines: int,
+        events: Dict[str, Any],
+        rule: str,
+        max_simulation_time: float = 200000.0
+) -> Tuple[float, List[Tuple[int, int, int, float, float]]]:
+    """
+    Simulare incrementală cu gestionarea evenimentelor dinamice și ETPC.
+    NU foloseste due_dates.
+    """
+
+    etpc_map: Dict[Tuple[int, int], List[Tuple[int, int, float]]] = defaultdict(list)
+    min_start_due_to_etpc: Dict[Tuple[int, int], float] = defaultdict(float)
+
+    for constr in events.get('etpc_constraints', []):
+        try:
+            fj, fo = int(constr['fore_job']), int(constr['fore_op_idx'])
+            hj, ho = int(constr['hind_job']), int(constr['hind_op_idx'])
+            tl = float(constr['time_lapse']);
+            tl = max(0.0, tl)
+            etpc_map[(fj, fo)].append((hj, ho, tl))
+        except (KeyError, ValueError, TypeError) as e:
+            print(f"Warning: Skipping invalid ETPC constraint {constr}: {e}")
+
+    current_jobs_sim: List[List[List[Tuple[int, int]]]] = copy.deepcopy(initial_jobs_ops)
+    bds_events = events.get("breakdowns", {})
+    bds_per_machine: Dict[int, List[Tuple[float, float]]] = {
+        m: sorted([(float(s), float(e)) for s, e in bds_events.get(m, [])], key=lambda x: x[0])
+        for m in range(n_machines)
+    }
+
+    job_progress = [0] * len(current_jobs_sim)
+    job_current_machine = [None] * len(current_jobs_sim)
+
+    arrival_times: List[float] = []
+    all_props = events.get('all_jobs_properties', [])
+
+    for i in range(len(current_jobs_sim)):
+        props_found = next((p for p in all_props if p.get('is_initial') and p.get('initial_job_idx') == i), None)
+        current_arrival_time = 0.0
+        if props_found:
+            current_arrival_time = float(props_found.get('parsed_arrival_time', 0.0))
+        arrival_times.append(current_arrival_time)
+
+    job_earliest_start: List[float] = [arr_time for arr_time in arrival_times]
+    effective_op_ready_time: Dict[Tuple[int, int], float] = {}
+
+    for j_init_idx in range(len(current_jobs_sim)):
+        if current_jobs_sim[j_init_idx]:
+            etpc_min = min_start_due_to_etpc.get((j_init_idx, 0), 0.0)
+            # Pentru joburile initiale, arrival_times[j_init_idx] este timpul de sosire (0.0 de obicei)
+            effective_op_ready_time[(j_init_idx, 0)] = max(arrival_times[j_init_idx], etpc_min)
+
+    active_ops: Dict[int, Tuple[int, int, float, float] | None] = {m: None for m in range(n_machines)}
+    schedule: List[Tuple[int, int, int, float, float]] = []
+    t: float = 0.0
+
+    dynamic_event_list = []
+    for t_add, new_job_ops in events.get("added_jobs", []):
+        dynamic_event_list.append({'time': float(t_add), 'type': 'add', 'data': new_job_ops})
+    for t_c, j_c_idx in events.get("cancelled_jobs", []):
+        dynamic_event_list.append({'time': float(t_c), 'type': 'cancel', 'data': j_c_idx})
+    dynamic_event_list.sort(key=lambda ev: ev['time'])
+    current_dynamic_event_idx = 0
+
+    while t < max_simulation_time:
+        num_active_uncompleted_jobs = 0
+        for j_idx_loop in range(len(current_jobs_sim)):
+            if j_idx_loop < len(job_progress) and job_progress[j_idx_loop] < len(current_jobs_sim[j_idx_loop]):
+                num_active_uncompleted_jobs += 1
+        if num_active_uncompleted_jobs == 0 and current_dynamic_event_idx >= len(dynamic_event_list):
+            break
+
+        while current_dynamic_event_idx < len(dynamic_event_list) and \
+                dynamic_event_list[current_dynamic_event_idx]['time'] <= t + 1e-9:
+            event = dynamic_event_list[current_dynamic_event_idx]
+            if abs(event['time'] - t) > 1e-9 and event['time'] < t:
+                current_dynamic_event_idx += 1;
+                continue
+            current_dynamic_event_idx += 1
+            if event['type'] == 'add':
+                new_job_ops_data = copy.deepcopy(event['data'])
+                new_j_id = len(current_jobs_sim)
+                current_jobs_sim.append(new_job_ops_data)
                 job_progress.append(0)
                 job_current_machine.append(None)
-                due_dates.append(100*(j_id+1))
-                job_earliest_start.append(t)
-                arrival_times.append(t)
-        # Cancelled jobs
-        for t_c, j_c in events["cancelled_jobs"]:
-            if t_c == t and j_c < len(job_progress):
-                job_progress[j_c] = len(jobs[j_c])
-                if job_current_machine[j_c] is not None:
-                    mstop = job_current_machine[j_c]
-                    active_ops[mstop] = None
-                    job_current_machine[j_c] = None
-        # Start breakdown – drop running op
-        for m in range(n_machines):
-            if any(s == t for s, _ in bds_per_machine[m]) and active_ops[m] is not None:
-                j_b, *_ = active_ops[m]
-                active_ops[m] = None
+                arrival_time_new_job = event['time']
+                arrival_times.append(arrival_time_new_job)  # Adaugam la lista de arrival_times
+                job_earliest_start.append(arrival_time_new_job)
+                if new_job_ops_data:  # Daca jobul adaugat are operatii
+                    etpc_min_new = min_start_due_to_etpc.get((new_j_id, 0), 0.0)
+                    effective_op_ready_time[(new_j_id, 0)] = max(arrival_time_new_job, etpc_min_new)
+            elif event['type'] == 'cancel':
+                j_c = event['data']
+                if j_c < len(job_progress) and job_progress[j_c] < len(current_jobs_sim[j_c]):
+                    print(f"Time {t:.2f}: Job {j_c} cancelled.")
+                    job_progress[j_c] = len(current_jobs_sim[j_c])
+                    if job_current_machine[j_c] is not None:
+                        active_ops[job_current_machine[j_c]] = None
+                        job_current_machine[j_c] = None
+
+        for m_bd_check in range(n_machines):
+            is_breaking_down_now = any(s_bd <= t < e_bd for s_bd, e_bd in bds_per_machine.get(m_bd_check, []))
+            if is_breaking_down_now and active_ops[m_bd_check] is not None:
+                j_b, op_b, st_b, _rem_b = active_ops[m_bd_check]
+                #print(f"Time {t:.2f}: Machine {m_bd_check} breakdown. Op J{j_b}-O{op_b} interrupted.")
+                active_ops[m_bd_check] = None
                 job_current_machine[j_b] = None
-        # Advance running operations
-        for m in range(n_machines):
-            if active_ops[m] is not None and not in_breakdown(m, t):
-                jop, opidx, st, rem = active_ops[m]
-                rem -= 1
-                if rem <= 0:
-                    finish = t+1
-                    job_progress[jop] += 1
-                    job_earliest_start[jop] = finish
-                    schedule.append((jop, opidx, m, st, finish))
-                    active_ops[m] = None
-                    job_current_machine[jop] = None
+                job_earliest_start[j_b] = t
+                etpc_min_interrupted = min_start_due_to_etpc.get((j_b, op_b), 0.0)
+                effective_op_ready_time[(j_b, op_b)] = max(t, etpc_min_interrupted)
+
+        for m_adv in range(n_machines):
+            if active_ops[m_adv] is not None and not any(
+                    s_bd <= t < e_bd for s_bd, e_bd in bds_per_machine.get(m_adv, [])):
+                jop_adv, opidx_adv, st_adv, rem_adv = active_ops[m_adv]
+                rem_adv -= 1.0
+                if rem_adv < 1e-9:
+                    finish_time = t + 1.0
+                    job_progress[jop_adv] += 1
+                    job_earliest_start[jop_adv] = finish_time
+                    schedule.append((jop_adv, opidx_adv, m_adv, st_adv, finish_time))
+                    active_ops[m_adv] = None
+                    job_current_machine[jop_adv] = None
+
+                    if (jop_adv, opidx_adv) in etpc_map:
+                        for j_h, o_h, lapse in etpc_map[(jop_adv, opidx_adv)]:
+                            new_min_start_for_hind = finish_time + lapse
+                            current_min_etpc = min_start_due_to_etpc.get((j_h, o_h), 0.0)
+                            min_start_due_to_etpc[(j_h, o_h)] = max(current_min_etpc, new_min_start_for_hind)
+
+                            # Actualizam effective_op_ready_time pentru operatia hind afectata
+                            # Daca operatia hind exista (jobul j_h a fost adaugat si op o_h e valida)
+                            if j_h < len(job_earliest_start) and \
+                                    ((o_h == 0) or \
+                                     (o_h > 0 and (
+                                     j_h, o_h - 1) in effective_op_ready_time)):  # Verificam daca pred din job e ready
+
+                                base_ready_for_hind = job_earliest_start[j_h] if o_h == 0 else float('-inf')
+                                if o_h > 0:
+                                    # Cautam timpul de final al operatiei (j_h, o_h-1) daca a fost programata
+                                    found_pred_in_schedule = False
+                                    for sj, so, _, _, se_sched in schedule:
+                                        if sj == j_h and so == o_h - 1:
+                                            base_ready_for_hind = se_sched
+                                            found_pred_in_schedule = True
+                                            break
+                                    # Daca predecesorul nu s-a terminat inca, nu putem seta effective_ready_time final
+                                    # Se va calcula cand devine candidat
+                                    if not found_pred_in_schedule: continue
+
+                                effective_op_ready_time[(j_h, o_h)] = max(base_ready_for_hind,
+                                                                          min_start_due_to_etpc.get((j_h, o_h), 0.0))
                 else:
-                    active_ops[m] = (jop, opidx, st, rem)
-        # machine loads for LLM
-        machine_loads = {m: (active_ops[m][3] if active_ops[m] is not None else 0) for m in range(n_machines)}
-        # Dispatch on idle
-        for m in range(n_machines):
-            if active_ops[m] is None and not in_breakdown(m, t):
-                best: Tuple[float,int,int,int] | None = None
-                for j in range(len(jobs)):
-                    if job_progress[j] >= len(jobs[j]):
+                    active_ops[m_adv] = (jop_adv, opidx_adv, st_adv, rem_adv)
+
+        machine_loads = {m_load: (active_ops[m_load][3] if active_ops[m_load] is not None else 0.0)
+                         for m_load in range(n_machines)}
+
+        for m_dispatch in range(n_machines):
+            if active_ops[m_dispatch] is None and not any(
+                    s_bd <= t < e_bd for s_bd, e_bd in bds_per_machine.get(m_dispatch, [])):
+                best_candidate_dispatch: Tuple[float, int, int, float] | None = None
+
+                for j_cand in range(len(current_jobs_sim)):
+                    if not (j_cand < len(job_progress) and job_progress[j_cand] < len(current_jobs_sim[j_cand])):
                         continue
-                    if job_current_machine[j] is not None or t < job_earliest_start[j]:
+                    if job_current_machine[j_cand] is not None:
                         continue
-                    opidx = job_progress[j]
-                    for m_alt, pt_alt in jobs[j][opidx]:
-                        if m_alt != m:
-                            continue
-                        pr = compute_priority(rule, j, opidx, m, pt_alt, t,
-                                               jobs=jobs,
-                                               job_progress=job_progress,
-                                               arrival_times=arrival_times,
-                                               due_dates=due_dates,
-                                               machine_loads=machine_loads)
-                        if best is None or pr < best[0]:
-                            best = (pr, j, opidx, pt_alt)
-                if best is not None:
-                    _prio, j_sel, op_sel, pt_sel = best
-                    active_ops[m] = (j_sel, op_sel, t, pt_sel)
-                    job_current_machine[j_sel] = m
-        t += 1
-    makespan = metric_makespan(schedule)
+
+                    opidx_cand = job_progress[j_cand]
+
+                    # Asiguram ca effective_op_ready_time este calculat/actualizat pentru candidati
+                    base_time_cand = job_earliest_start[j_cand] if j_cand < len(job_earliest_start) else t
+                    etpc_min_cand = min_start_due_to_etpc.get((j_cand, opidx_cand), 0.0)
+                    current_effective_op_earliest_start = max(base_time_cand, etpc_min_cand)
+                    effective_op_ready_time[(j_cand, opidx_cand)] = current_effective_op_earliest_start
+
+                    if t < current_effective_op_earliest_start - 1e-9:
+                        continue
+
+                    for m_alt, pt_alt_float in current_jobs_sim[j_cand][opidx_cand]:
+                        if m_alt == m_dispatch:
+                            pt_alt = float(pt_alt_float)
+                            if pt_alt < 1e-9: continue
+
+                            current_arrival_time_cand = arrival_times[j_cand] if j_cand < len(arrival_times) else 0.0
+
+                            # Apelam compute_priority fara due_dates
+                            pr = compute_priority(rule, j_cand, opidx_cand, m_dispatch, pt_alt, t,
+                                                  jobs=current_jobs_sim, job_progress=job_progress,
+                                                  arrival_times=arrival_times,  # due_dates a fost scos
+                                                  machine_loads=machine_loads)
+
+                            if best_candidate_dispatch is None or pr < best_candidate_dispatch[0]:
+                                best_candidate_dispatch = (pr, j_cand, opidx_cand, pt_alt)
+                            break
+
+                if best_candidate_dispatch is not None:
+                    _prio_sel, j_sel, op_sel, pt_sel = best_candidate_dispatch
+                    active_ops[m_dispatch] = (j_sel, op_sel, t, pt_sel)
+                    job_current_machine[j_sel] = m_dispatch
+
+        t += 1.0
+
+    makespan = max(op_tuple[TUPLE_FIELDS["end"]] for op_tuple in schedule) if schedule else t
+    if t >= max_simulation_time - 1e-9 and any(
+            job_progress[j] < len(current_jobs_sim[j]) for j in range(len(current_jobs_sim)) if
+            j < len(job_progress)):  # Verificam si len(job_progress)
+        makespan = max(makespan, max_simulation_time)
+
     return makespan, schedule
 
 ###############################################################################

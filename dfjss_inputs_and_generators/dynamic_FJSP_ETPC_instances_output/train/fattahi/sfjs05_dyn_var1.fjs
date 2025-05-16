@@ -1,0 +1,9 @@
+3 2
+2 2 0 43 1 36 2 0 64 1 71 
+2 2 0 34 1 53 2 0 36 1 21 
+2 2 0 21 1 35 2 0 43 1 37 
+
+# Dynamic Events
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+# op_details: num_machines_for_op m1_id(1-indexed) t1 m2_id(1-indexed) t2 ...
+A 8 3 2 2 2 44 1 36 2 2 63 1 71 

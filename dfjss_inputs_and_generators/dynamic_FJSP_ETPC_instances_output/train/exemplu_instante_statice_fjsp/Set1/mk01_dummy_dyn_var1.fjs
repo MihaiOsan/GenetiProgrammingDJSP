@@ -1,0 +1,15 @@
+2 2 # jobs machines
+2 1 1 10 1 2 5
+1 1 1 8
+
+# ETPC Constraints
+# fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse (all 0-indexed)
+0 0 1 0 3
+
+# Dynamic Events
+# Machine Breakdowns (machine_id(0-indexed) start_time end_time):
+B 0 15 20
+# Added Jobs (arrival_time new_job_sim_idx num_ops op_details...):
+A 5 2 1 1 2 6
+# Cancelled Jobs (cancellation_time original_job_id_to_cancel(0-indexed)):
+C 10 0

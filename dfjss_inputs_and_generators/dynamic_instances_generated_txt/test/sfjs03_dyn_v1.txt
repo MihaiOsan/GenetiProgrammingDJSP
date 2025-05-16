@@ -1,0 +1,18 @@
+3 2
+2 1 0 43 2 0 87 1 95 
+2 2 0 63 1 53 1 1 73 
+2 2 0 125 1 135 2 0 43 1 61 
+
+Dynamic Events
+
+# Added Jobs (arrival_time: num_ops num_alts_op1 m1 p1 ... num_alts_op2 m1 p1 ...)
+Added Jobs
+50: 2 1 1 115 1 0 91 
+85: 2 2 1 120 0 123 2 1 130 0 54 
+128: 2 1 1 58 1 1 110 
+142: 2 1 0 58 2 1 59 0 112 
+
+# ETPC Constraints (fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse)
+ETPC Constraints
+0 0 6 0 12
+6 0 0 0 7

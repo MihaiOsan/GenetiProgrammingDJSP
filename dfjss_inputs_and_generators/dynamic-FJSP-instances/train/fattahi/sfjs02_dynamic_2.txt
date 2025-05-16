@@ -8,4 +8,3 @@ Machine Breakdowns (x y z): Machine {x} breakdown from time {y} to {z}
 Added Jobs (first number is the time at which the job is added, then pairs of machines and process time)
 
 Cancelled Jobs
-63 0

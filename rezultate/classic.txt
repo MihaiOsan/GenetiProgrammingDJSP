@@ -1,55 +1,99 @@
+q
+=== Instanța: test_flex_break_6_util0.95_ec0.08_v1.json (jobs=10, machines=10) ===
+SPT => MS=4494.0, Idle_avg=846.20, Wait_avg=2056.41, T=0.130s
+LPT => MS=6822.0, Idle_avg=1220.80, Wait_avg=3955.40, T=0.209s
+FIFO => MS=5539.0, Idle_avg=1165.40, Wait_avg=2528.97, T=0.163s
+LIFO => MS=5626.0, Idle_avg=1201.20, Wait_avg=3251.56, T=0.177s
+SRPT => MS=5568.0, Idle_avg=1195.50, Wait_avg=2349.56, T=0.188s
+OPR => MS=5578.0, Idle_avg=1209.60, Wait_avg=2412.89, T=0.165s
+ECT => MS=5588.0, Idle_avg=1234.80, Wait_avg=2301.93, T=0.193s
+LLM => MS=5539.0, Idle_avg=1165.40, Wait_avg=2528.97, T=0.168s
+Random => MS=5406.0, Idle_avg=1090.60, Wait_avg=2925.87, T=0.160s
 
-=== Instanța: test_flex_break_2_util0.95_ec0.03.json (jobs=10, machines=10) ===
-SPT => MS=401, Idle_avg=47.30, Wait_avg=181.50, T=0.011s
-LPT => MS=501, Idle_avg=63.20, Wait_avg=243.06, T=0.013s
-FIFO => MS=481, Idle_avg=56.80, Wait_avg=199.62, T=0.013s
-LIFO => MS=434, Idle_avg=52.40, Wait_avg=229.11, T=0.012s
-SRPT => MS=457, Idle_avg=57.10, Wait_avg=189.34, T=0.014s
-OPR => MS=473, Idle_avg=67.00, Wait_avg=194.81, T=0.013s
-ECT => MS=439, Idle_avg=61.70, Wait_avg=182.04, T=0.013s
-LLM => MS=481, Idle_avg=56.80, Wait_avg=199.62, T=0.014s
-Random => MS=443, Idle_avg=55.20, Wait_avg=214.36, T=0.012s
+=== Instanța: test_flex_break_2_util0.95_ec0.08_v0.json (jobs=10, machines=10) ===
+SPT => MS=5007.0, Idle_avg=1101.70, Wait_avg=2356.67, T=0.143s
+LPT => MS=7116.0, Idle_avg=1276.20, Wait_avg=3873.46, T=0.220s
+FIFO => MS=5883.0, Idle_avg=1198.60, Wait_avg=2701.85, T=0.173s
+LIFO => MS=5699.0, Idle_avg=1095.40, Wait_avg=3322.64, T=0.169s
+SRPT => MS=5832.0, Idle_avg=1138.60, Wait_avg=2599.85, T=0.190s
+OPR => MS=5725.0, Idle_avg=1199.30, Wait_avg=2580.89, T=0.166s
+ECT => MS=5630.0, Idle_avg=1143.40, Wait_avg=2526.22, T=0.179s
+LLM => MS=5883.0, Idle_avg=1198.60, Wait_avg=2701.85, T=0.175s
+Random => MS=5508.0, Idle_avg=1072.50, Wait_avg=2975.05, T=0.194s
 
-=== Instanța: test_flex_break_1_util0.7_ec0.08.json (jobs=10, machines=10) ===
-SPT => MS=493, Idle_avg=102.20, Wait_avg=197.32, T=0.013s
-LPT => MS=505, Idle_avg=83.80, Wait_avg=215.00, T=0.014s
-FIFO => MS=511, Idle_avg=102.20, Wait_avg=202.38, T=0.015s
-LIFO => MS=506, Idle_avg=99.40, Wait_avg=202.97, T=0.014s
-SRPT => MS=508, Idle_avg=100.50, Wait_avg=202.00, T=0.015s
-OPR => MS=494, Idle_avg=97.40, Wait_avg=201.12, T=0.014s
-ECT => MS=497, Idle_avg=99.70, Wait_avg=199.54, T=0.014s
-LLM => MS=511, Idle_avg=102.20, Wait_avg=202.38, T=0.014s
-Random => MS=498, Idle_avg=88.20, Wait_avg=202.46, T=0.014s
+=== Instanța: test_flex_break_7_util0.95_ec0.15_v1.json (jobs=10, machines=10) ===
+SPT => MS=5241.0, Idle_avg=1191.90, Wait_avg=2332.59, T=0.155s
+LPT => MS=6883.0, Idle_avg=1217.30, Wait_avg=4191.24, T=0.206s
+FIFO => MS=5814.0, Idle_avg=1206.50, Wait_avg=2623.73, T=0.175s
+LIFO => MS=5800.0, Idle_avg=1099.10, Wait_avg=3141.81, T=0.185s
+SRPT => MS=5763.0, Idle_avg=1228.30, Wait_avg=2618.07, T=0.185s
+OPR => MS=5734.0, Idle_avg=1222.80, Wait_avg=2577.48, T=0.170s
+ECT => MS=5850.0, Idle_avg=1251.50, Wait_avg=2616.86, T=0.193s
+LLM => MS=5814.0, Idle_avg=1206.50, Wait_avg=2623.73, T=0.177s
+Random => MS=5735.0, Idle_avg=1142.20, Wait_avg=2760.68, T=0.176s
 
-=== Instanța: test_flex_break_3_util0.95_ec0.08.json (jobs=11, machines=10) ===
-SPT => MS=370, Idle_avg=37.60, Wait_avg=171.40, T=0.011s
-LPT => MS=534, Idle_avg=68.10, Wait_avg=269.04, T=0.015s
-FIFO => MS=451, Idle_avg=56.60, Wait_avg=186.90, T=0.013s
-LIFO => MS=423, Idle_avg=46.20, Wait_avg=242.00, T=0.012s
-SRPT => MS=453, Idle_avg=57.40, Wait_avg=177.93, T=0.015s
-OPR => MS=450, Idle_avg=53.90, Wait_avg=182.82, T=0.013s
-ECT => MS=440, Idle_avg=57.90, Wait_avg=173.47, T=0.014s
-LLM => MS=451, Idle_avg=56.60, Wait_avg=186.90, T=0.013s
-Random => MS=439, Idle_avg=49.10, Wait_avg=219.29, T=0.013s
+=== Instanța: test_flex_break_3_util0.95_ec0.15_v0.json (jobs=10, machines=10) ===
+SPT => MS=4450.0, Idle_avg=835.80, Wait_avg=2214.37, T=0.129s
+LPT => MS=7027.0, Idle_avg=1261.50, Wait_avg=4415.22, T=0.224s
+FIFO => MS=5730.0, Idle_avg=1158.50, Wait_avg=2679.82, T=0.172s
+LIFO => MS=5706.0, Idle_avg=1106.50, Wait_avg=3726.00, T=0.182s
+SRPT => MS=5749.0, Idle_avg=1156.90, Wait_avg=2500.76, T=0.205s
+OPR => MS=5725.0, Idle_avg=1153.00, Wait_avg=2473.43, T=0.173s
+ECT => MS=5560.0, Idle_avg=1189.60, Wait_avg=2394.98, T=0.194s
+LLM => MS=5730.0, Idle_avg=1158.50, Wait_avg=2679.82, T=0.172s
+Random => MS=5538.0, Idle_avg=1092.70, Wait_avg=3138.06, T=0.167s
 
-=== Instanța: test_flex_break_0_util0.7_ec0.03.json (jobs=10, machines=10) ===
-SPT => MS=500, Idle_avg=110.80, Wait_avg=232.36, T=0.013s
-LPT => MS=512, Idle_avg=92.20, Wait_avg=239.75, T=0.013s
-FIFO => MS=510, Idle_avg=101.10, Wait_avg=234.25, T=0.013s
-LIFO => MS=497, Idle_avg=99.70, Wait_avg=238.91, T=0.013s
-SRPT => MS=512, Idle_avg=96.10, Wait_avg=234.82, T=0.014s
-OPR => MS=506, Idle_avg=100.90, Wait_avg=236.22, T=0.013s
-ECT => MS=530, Idle_avg=112.70, Wait_avg=233.16, T=0.015s
-LLM => MS=510, Idle_avg=101.10, Wait_avg=234.25, T=0.014s
-Random => MS=504, Idle_avg=101.30, Wait_avg=235.72, T=0.014s
+=== Instanța: test_flex_break_0_util0.75_ec0.08_v0.json (jobs=10, machines=10) ===
+SPT => MS=5820.0, Idle_avg=1631.70, Wait_avg=2921.09, T=0.166s
+LPT => MS=6833.0, Idle_avg=1441.20, Wait_avg=3388.03, T=0.191s
+FIFO => MS=6345.0, Idle_avg=1630.60, Wait_avg=3031.00, T=0.181s
+LIFO => MS=6211.0, Idle_avg=1545.60, Wait_avg=3329.23, T=0.176s
+SRPT => MS=6348.0, Idle_avg=1607.80, Wait_avg=2995.78, T=0.196s
+OPR => MS=6303.0, Idle_avg=1522.60, Wait_avg=2990.07, T=0.184s
+ECT => MS=6249.0, Idle_avg=1604.50, Wait_avg=2966.35, T=0.188s
+LLM => MS=6345.0, Idle_avg=1630.60, Wait_avg=3031.00, T=0.181s
+Random => MS=6209.0, Idle_avg=1573.10, Wait_avg=3106.41, T=0.178s
+
+=== Instanța: test_flex_break_4_util0.75_ec0.08_v1.json (jobs=10, machines=10) ===
+SPT => MS=5728.0, Idle_avg=1519.50, Wait_avg=2562.69, T=0.169s
+LPT => MS=6844.0, Idle_avg=1238.10, Wait_avg=3751.29, T=0.198s
+FIFO => MS=5851.0, Idle_avg=1281.50, Wait_avg=2652.67, T=0.171s
+LIFO => MS=5804.0, Idle_avg=1255.40, Wait_avg=2775.03, T=0.167s
+SRPT => MS=5885.0, Idle_avg=1306.90, Wait_avg=2646.60, T=0.179s
+OPR => MS=5854.0, Idle_avg=1248.20, Wait_avg=2679.33, T=0.169s
+ECT => MS=5929.0, Idle_avg=1372.20, Wait_avg=2615.90, T=0.185s
+LLM => MS=5851.0, Idle_avg=1281.50, Wait_avg=2652.67, T=0.170s
+Random => MS=5758.0, Idle_avg=1245.90, Wait_avg=2738.95, T=0.163s
+
+=== Instanța: test_flex_break_1_util0.75_ec0.15_v0.json (jobs=10, machines=10) ===
+SPT => MS=5693.0, Idle_avg=1496.90, Wait_avg=2630.13, T=0.167s
+LPT => MS=6894.0, Idle_avg=1206.90, Wait_avg=3861.75, T=0.199s
+FIFO => MS=5757.0, Idle_avg=1286.00, Wait_avg=2701.14, T=0.168s
+LIFO => MS=5672.0, Idle_avg=1221.50, Wait_avg=2792.52, T=0.160s
+SRPT => MS=5732.0, Idle_avg=1246.30, Wait_avg=2720.54, T=0.166s
+OPR => MS=5897.0, Idle_avg=1260.10, Wait_avg=2737.65, T=0.169s
+ECT => MS=5753.0, Idle_avg=1257.90, Wait_avg=2707.65, T=0.168s
+LLM => MS=5757.0, Idle_avg=1286.00, Wait_avg=2701.14, T=0.167s
+Random => MS=5722.0, Idle_avg=1241.70, Wait_avg=2752.64, T=0.161s
+
+=== Instanța: test_flex_break_5_util0.75_ec0.15_v1.json (jobs=10, machines=10) ===
+SPT => MS=5655.0, Idle_avg=1427.30, Wait_avg=2562.69, T=0.173s
+LPT => MS=6729.0, Idle_avg=1198.30, Wait_avg=3669.46, T=0.192s
+FIFO => MS=5706.0, Idle_avg=1175.10, Wait_avg=2667.27, T=0.168s
+LIFO => MS=5607.0, Idle_avg=1222.60, Wait_avg=2820.31, T=0.159s
+SRPT => MS=5780.0, Idle_avg=1239.80, Wait_avg=2655.25, T=0.178s
+OPR => MS=5748.0, Idle_avg=1215.10, Wait_avg=2675.09, T=0.168s
+ECT => MS=5653.0, Idle_avg=1233.60, Wait_avg=2640.33, T=0.170s
+LLM => MS=5706.0, Idle_avg=1175.10, Wait_avg=2667.27, T=0.169s
+Random => MS=5796.0, Idle_avg=1179.40, Wait_avg=2742.03, T=0.170s
 
 === Average per rule ===
-SPT: MS=441.00, Idle=74.47, Wait=195.65, T=0.012s
-LPT: MS=513.00, Idle=76.83, Wait=241.71, T=0.014s
-FIFO: MS=488.25, Idle=79.17, Wait=205.79, T=0.014s
-LIFO: MS=465.00, Idle=74.42, Wait=228.25, T=0.013s
-SRPT: MS=482.50, Idle=77.78, Wait=201.02, T=0.015s
-OPR: MS=480.75, Idle=79.80, Wait=203.75, T=0.013s
-ECT: MS=476.50, Idle=83.00, Wait=197.05, T=0.014s
-LLM: MS=488.25, Idle=79.17, Wait=205.79, T=0.014s
-Random: MS=471.00, Idle=73.45, Wait=217.96, T=0.013s
+SPT: MS=5261.00, Idle=1256.38, Wait=2454.58, T=0.154s
+LPT: MS=6893.50, Idle=1257.54, Wait=3888.23, T=0.205s
+FIFO: MS=5828.12, Idle=1262.78, Wait=2698.31, T=0.171s
+LIFO: MS=5765.62, Idle=1218.41, Wait=3144.89, T=0.172s
+SRPT: MS=5832.12, Idle=1265.01, Wait=2635.80, T=0.186s
+OPR: MS=5820.50, Idle=1253.84, Wait=2640.85, T=0.171s
+ECT: MS=5776.50, Idle=1285.94, Wait=2596.28, T=0.184s
+LLM: MS=5828.12, Idle=1262.78, Wait=2698.31, T=0.172s
+Random: MS=5709.00, Idle=1204.76, Wait=2892.46, T=0.171s

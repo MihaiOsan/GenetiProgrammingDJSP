@@ -1,0 +1,33 @@
+3 3
+3 2 0 17 1 25 2 0 40 1 30 2 1 50 2 60 
+3 2 0 30 2 50 2 0 50 1 60 2 1 70 2 60 
+3 2 0 50 1 60 2 1 70 2 80 2 1 90 2 100 
+
+Dynamic Events
+
+# Machine Breakdowns (machine_id start_time end_time)
+Machine Breakdowns
+0 57 97
+
+# Added Jobs (arrival_time: num_ops num_alts_op1 m1 p1 ... num_alts_op2 m1 p1 ...)
+Added Jobs
+18: 3 2 1 81 0 37 2 0 31 1 35 2 2 87 1 80 
+25: 3 2 1 78 2 90 2 0 35 2 69 2 2 79 1 55 
+46: 3 2 1 84 0 43 2 1 64 2 78 2 2 78 0 42 
+61: 3 2 0 19 2 64 2 2 68 0 39 2 2 50 1 78 
+100: 3 2 1 62 2 77 2 2 63 1 87 2 0 42 1 29 
+110: 3 2 2 52 1 40 2 2 99 1 65 2 0 42 2 99 
+
+# Cancelled Jobs (cancel_time initial_job_sim_idx_to_cancel)
+Cancelled Jobs
+3 1
+
+# ETPC Constraints (fore_job_sim_idx fore_op_idx hind_job_sim_idx hind_op_idx time_lapse)
+ETPC Constraints
+8 0 5 1 13
+8 0 4 2 17
+4 2 1 0 8
+1 2 8 0 7
+8 2 5 1 13
+4 1 1 0 12
+4 0 8 0 14
